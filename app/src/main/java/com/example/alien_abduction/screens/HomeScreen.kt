@@ -3,14 +3,11 @@ package com.example.alien_abduction.screens
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -20,16 +17,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.example.alien_abduction.GameSetup
+import com.example.alien_abduction.NavigationDestination
 import com.example.alien_abduction.R
+import com.example.alien_abduction.customComposables.BottomNavBar
 import com.example.alien_abduction.customComposables.MainGameButton
+import com.example.alien_abduction.gameLogic.GameModes
 import com.example.alien_abduction.ui.theme.AlienabductionTheme
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreen(modifier: Modifier = Modifier, onModeChosen: (GameModes) -> Unit = {}) {
     Scaffold(
         modifier = modifier
             .fillMaxSize(),
-        bottomBar = { BottonNavBar() },
+        bottomBar = { BottomNavBar() },
         containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
         Column(
@@ -44,7 +46,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 modifier = Modifier
                     .padding(top = 10.dp)
             )
-            GameModeList()
+            GameModeList(onModeChosen = { onModeChosen(it) })
             Spacer(modifier = Modifier.height(40.dp))
         }
     }
@@ -57,6 +59,7 @@ fun TopBar(){
 
 @Composable
 fun GameModeList(
+    onModeChosen: (GameModes) -> Unit = {}
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -64,56 +67,29 @@ fun GameModeList(
         modifier = Modifier
             .fillMaxWidth()
             .height(240.dp)
-            .padding(start = 30.dp, end = 30.dp, )
+            .padding(start = 30.dp, end = 30.dp,)
     ) {
         Text(text = "Wähle einen Spielmodus")
         MainGameButton(
             "Klassisch",
-            onClick = { TODO() },
+            onClick = { onModeChosen(GameModes.CLASSIC) },
             modifier = Modifier
                 .fillMaxWidth()
         )
         MainGameButton(
             "Erkunden",
-            onClick = { TODO() },
+            onClick = { onModeChosen(GameModes.EXPLORE) },
             modifier = Modifier.fillMaxWidth()
         )
         MainGameButton(
             "Mehrspieler",
-            onClick = { TODO() },
+            onClick = { onModeChosen(GameModes.MULTIPLAYER) },
             modifier = Modifier.fillMaxWidth()
         )
         MainGameButton(
             "Herausforderungen",
-            onClick = { TODO() },
+            onClick = { onModeChosen(GameModes.CHALLENGE) },
             modifier = Modifier.fillMaxWidth()
-        )
-    }
-}
-
-@Composable
-fun BottonNavBar(){
-    HorizontalDivider()
-    Row(
-        horizontalArrangement = Arrangement.SpaceAround,
-        verticalAlignment = Alignment.Top,
-        modifier = Modifier
-            //.background(MaterialTheme.colorScheme.surface)
-            .fillMaxWidth()
-            .height(65.dp)
-            .padding(top = 15.dp)
-    ) {
-        Icon(
-            painter = painterResource(id = R.drawable.joystick),
-            contentDescription = "Play",
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.height(40.dp)
-        )
-        Icon(
-            painter = painterResource(id = R.drawable.profile),
-            contentDescription = "Play",
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.height(40.dp)
         )
     }
 }

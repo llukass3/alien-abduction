@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.android.libraries.mapsplatform.secrets.gradle.plugin)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -67,4 +68,6 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation (libs.androidx.ui.text.google.fonts)
+    implementation(libs.navigation.compose)
+    implementation(libs.kotlinx.serialization.json)
 }
