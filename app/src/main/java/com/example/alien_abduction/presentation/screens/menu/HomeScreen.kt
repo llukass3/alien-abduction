@@ -1,4 +1,4 @@
-package com.example.alien_abduction.screens
+package com.example.alien_abduction.presentation.screens.menu
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -17,21 +17,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import com.example.alien_abduction.GameSetup
-import com.example.alien_abduction.NavigationDestination
 import com.example.alien_abduction.R
-import com.example.alien_abduction.customComposables.BottomNavBar
-import com.example.alien_abduction.customComposables.MainGameButton
-import com.example.alien_abduction.gameLogic.GameModes
+import com.example.alien_abduction.presentation.customComposables.MainGameButton
+import com.example.alien_abduction.domain.GameMode
 import com.example.alien_abduction.ui.theme.AlienabductionTheme
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier, onModeChosen: (GameModes) -> Unit = {}) {
+fun HomeScreen(modifier: Modifier = Modifier, onModeChosen: (GameMode) -> Unit = {}) {
     Scaffold(
         modifier = modifier
             .fillMaxSize(),
-        bottomBar = { BottomNavBar() },
         containerColor = MaterialTheme.colorScheme.background
     ) { innerPadding ->
         Column(
@@ -59,7 +54,7 @@ fun TopBar(){
 
 @Composable
 fun GameModeList(
-    onModeChosen: (GameModes) -> Unit = {}
+    onModeChosen: (GameMode) -> Unit = {}
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -69,26 +64,29 @@ fun GameModeList(
             .height(240.dp)
             .padding(start = 30.dp, end = 30.dp,)
     ) {
-        Text(text = "Wähle einen Spielmodus")
+        Text(
+            text = "Wähle einen Spielmodus",
+            modifier = Modifier.padding(bottom = 10.dp)
+        )
         MainGameButton(
             "Klassisch",
-            onClick = { onModeChosen(GameModes.CLASSIC) },
+            onClick = { onModeChosen(GameMode.CLASSIC) },
             modifier = Modifier
                 .fillMaxWidth()
         )
         MainGameButton(
             "Erkunden",
-            onClick = { onModeChosen(GameModes.EXPLORE) },
+            onClick = { onModeChosen(GameMode.EXPLORE) },
             modifier = Modifier.fillMaxWidth()
         )
         MainGameButton(
             "Mehrspieler",
-            onClick = { onModeChosen(GameModes.MULTIPLAYER) },
+            onClick = { onModeChosen(GameMode.MULTIPLAYER) },
             modifier = Modifier.fillMaxWidth()
         )
         MainGameButton(
             "Herausforderungen",
-            onClick = { onModeChosen(GameModes.CHALLENGE) },
+            onClick = { onModeChosen(GameMode.CHALLENGE) },
             modifier = Modifier.fillMaxWidth()
         )
     }

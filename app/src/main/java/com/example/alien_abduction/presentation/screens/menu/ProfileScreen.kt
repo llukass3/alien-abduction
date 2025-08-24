@@ -1,29 +1,27 @@
-package com.example.alien_abduction.screens
+package com.example.alien_abduction.presentation.screens.menu
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.alien_abduction.gameLogic.GameModes
 import com.example.alien_abduction.ui.theme.AlienHeadingFont
 import com.example.alien_abduction.ui.theme.AlienabductionTheme
 
 @Composable
-fun GameSetupScreen(gameModes: GameModes, modifier: Modifier = Modifier) {
+fun ProfileScreen(modifier: Modifier = Modifier) {
     Column (
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize()
     ){
         Text(
-            text = "Setup for ${gameModes.name}",
+            text = "Profile Screen",
             fontFamily = AlienHeadingFont
         )
     }
@@ -31,11 +29,10 @@ fun GameSetupScreen(gameModes: GameModes, modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-fun GameSetupPreview() {
+fun ProfileScreenPreview() {
     AlienabductionTheme {
         Scaffold { innerPadding ->
-            GameSetupScreen(GameModes.CLASSIC, modifier = Modifier.padding(innerPadding))
+            ProfileScreen(modifier = Modifier.padding(innerPadding))
         }
     }
 }
-

@@ -1,4 +1,23 @@
 <resources>
     <string name="app_name">Alien Abduction</string>
     <string name="title_activity_maps">MapsActivity</string>
+
+    <!-- game mode descriptions -->
+    <string name="game_mode_classic_description">
+        Die Aliens haben dich entführt! Zum Glück konntest du dich wieder zurück
+        auf die Erde zu teleportieren! Finde so schnell wie möglich heraus wo du bist, aber lass
+        dir nicht zu viel Zeit, denn die Aliens sind schon auf der Suche nach dir!
+        Dies ist der klassichste Spielmodus von Alien Abduction
+    </string>
+    <string name="game_mode_explore_description">
+        In diesem Modus hast du keinen Zeitdruck. Lass dir also so viel Zeit wie du möchtest
+        und lass die Umgebung auf dich wirken.
+    </string>
+    <string name="game_mode_multiplayer_description">
+        Messe dich mit deinen Freunden! Ihr werdet nacheinander
+        am selben Ort ausgesetzt. Wer den Standort am genauesten erraten kann, gewinnt!
+    </string>
+    <string name="game_mode_challenge_description">
+        Erstelle ein eigenes Szenario für deine Freunde
+    </string>
 </resources>

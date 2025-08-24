@@ -1,4 +1,4 @@
-package com.example.alien_abduction.customComposables
+package com.example.alien_abduction.presentation.customComposables
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
