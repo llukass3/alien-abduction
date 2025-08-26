@@ -81,7 +81,9 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable<ProfileScreen> {
-                            ProfileScreen()
+                            ProfileScreen(
+                                modifier = Modifier.padding(innerPadding)
+                            )
                         }
                     }
                 }

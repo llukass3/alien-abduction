@@ -80,7 +80,7 @@ fun GameSetupPreview() {
         Scaffold { innerPadding ->
             GameSetupScreen(
                 modifier = Modifier.padding(innerPadding),
-                mode = GameModes.fromMode(GameMode.CLASSIC),
+                mode = GameModes.fromMode(GameMode.CHALLENGE),
             )
         }
     }

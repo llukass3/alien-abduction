@@ -27,6 +27,38 @@ val AlienBodyFont = FontFamily(
     Font(
         googleFont = GoogleFont(name = "Montserrat"),
         fontProvider = provider,
+        weight = FontWeight.Light,
+        style = FontStyle.Normal
+    ),
+    Font(
+        googleFont = GoogleFont(name = "Montserrat"),
+        fontProvider = provider,
+        weight = FontWeight.Normal,
+        style = FontStyle.Normal
+    ),
+    Font(
+        googleFont = GoogleFont(name = "Montserrat"),
+        fontProvider = provider,
+        weight = FontWeight.Medium,
+        style = FontStyle.Normal
+    ),
+    Font(
+        googleFont = GoogleFont(name = "Montserrat"),
+        fontProvider = provider,
+        weight = FontWeight.SemiBold,
+        style = FontStyle.Normal
+    ),
+    Font(
+        googleFont = GoogleFont(name = "Montserrat"),
+        fontProvider = provider,
+        weight = FontWeight.Bold,
+        style = FontStyle.Normal
+    ),
+    Font(
+        googleFont = GoogleFont(name = "Montserrat"),
+        fontProvider = provider,
+        weight = FontWeight.ExtraBold,
+        style = FontStyle.Normal
     )
 )
 
@@ -37,6 +69,13 @@ val Typography = Typography(
         fontFamily = AlienBodyFont,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    titleLarge = TextStyle(
+        fontFamily = AlienBodyFont,
+        fontWeight = FontWeight.W700,
+        fontSize = 25.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
@@ -57,7 +96,7 @@ val Typography = Typography(
     headlineLarge = TextStyle(
         fontFamily = AlienHeadingFont,
         fontWeight = FontWeight.Normal,
-        fontSize = 30.sp,
+        fontSize = 28.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     )
