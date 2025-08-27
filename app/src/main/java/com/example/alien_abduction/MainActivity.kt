@@ -18,14 +18,17 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.example.alien_abduction.domain.GameMode
 import com.example.alien_abduction.domain.GameModes
+import com.example.alien_abduction.domain.navigation.AchievementsScreen
+import com.example.alien_abduction.domain.navigation.GameHistoryScreen
 import com.example.alien_abduction.domain.navigation.GameSetup
 import com.example.alien_abduction.domain.navigation.HomeScreen
 import com.example.alien_abduction.domain.navigation.ProfileScreen
+import com.example.alien_abduction.domain.navigation.StreetViewScreen
 import com.example.alien_abduction.presentation.customComposables.BottomNavBar
-import com.example.alien_abduction.presentation.customComposables.MainGameButton
-import com.example.alien_abduction.presentation.screens.menu.setupScreens.GameSetupScreen
+import com.example.alien_abduction.presentation.screens.menu.AchievementsScreen
+import com.example.alien_abduction.presentation.screens.menu.GameHistoryScreen
+import com.example.alien_abduction.presentation.screens.menu.GameSetupScreen
 import com.example.alien_abduction.presentation.screens.menu.HomeScreen
 import com.example.alien_abduction.presentation.screens.menu.ProfileScreen
 import com.example.alien_abduction.ui.theme.AlienabductionTheme
@@ -41,18 +44,17 @@ class MainActivity : ComponentActivity() {
         )
         setContent {
             AlienabductionTheme {
-
                 val navController = rememberNavController()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
-                val currentScreen = navBackStackEntry?.destination?.route
+                val currentScreen = navBackStackEntry?.destination?.route //saves current screen
 
                 Scaffold(
                     bottomBar = {
+                        //filter all screens where bottom nav bar should not be shown
                         val showBottomBar = when {
-                            currentScreen == HomeScreen::class.qualifiedName -> true
-                            currentScreen == ProfileScreen::class.qualifiedName -> true
-                            currentScreen?.startsWith(GameSetup::class.qualifiedName!!) == true -> true
-                            else -> false
+                            currentScreen == StreetViewScreen::class.qualifiedName -> false
+                            //currentScreen?.startsWith(GameSetup::class.qualifiedName!!) == true -> true
+                            else -> true
                         }
 
                         if (showBottomBar) {
@@ -82,6 +84,18 @@ class MainActivity : ComponentActivity() {
                         }
                         composable<ProfileScreen> {
                             ProfileScreen(
+                                modifier = Modifier.padding(innerPadding),
+                                navToGameHistory = { navController.navigate(GameHistoryScreen) },
+                                navToAchievements = { navController.navigate(AchievementsScreen) }
+                            )
+                        }
+                        composable<GameHistoryScreen> {
+                            GameHistoryScreen(
+                                modifier = Modifier.padding(innerPadding)
+                            )
+                        }
+                        composable<AchievementsScreen> {
+                            AchievementsScreen(
                                 modifier = Modifier.padding(innerPadding)
                             )
                         }

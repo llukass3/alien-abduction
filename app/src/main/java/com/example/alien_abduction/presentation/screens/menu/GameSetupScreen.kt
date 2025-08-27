@@ -1,4 +1,4 @@
-package com.example.alien_abduction.presentation.screens.menu.setupScreens
+package com.example.alien_abduction.presentation.screens.menu
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -6,9 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -22,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.alien_abduction.domain.GameMode
 import com.example.alien_abduction.domain.GameModes
-import com.example.alien_abduction.presentation.customComposables.MainGameButton
 import com.example.alien_abduction.ui.theme.AlienabductionTheme
 
 @Composable

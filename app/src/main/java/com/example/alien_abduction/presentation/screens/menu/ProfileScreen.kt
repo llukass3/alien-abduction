@@ -43,7 +43,11 @@ import com.example.alien_abduction.ui.theme.AlienLightGray
 import com.example.alien_abduction.ui.theme.AlienabductionTheme
 
 @Composable
-fun ProfileScreen(modifier: Modifier = Modifier) {
+fun ProfileScreen(
+    modifier: Modifier = Modifier,
+    navToGameHistory: () -> Unit = {},
+    navToAchievements: () -> Unit = {}
+) {
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
@@ -69,14 +73,14 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
                     .weight(1f)
                     .height(150.dp),
                 painterResourceId = R.drawable.game_history,
-                onClick = {}
+                onClick = {navToGameHistory()}
             )
             MainGameCard(
                 modifier = Modifier
                     .weight(1f)
                     .height(150.dp),
                 painterResourceId = R.drawable.badge,
-                onClick = {}
+                onClick = {navToAchievements()}
             )
         }
     }

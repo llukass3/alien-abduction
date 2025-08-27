@@ -1,6 +1,7 @@
 package com.example.alien_abduction.presentation.screens.menu
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -14,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -23,32 +25,23 @@ import com.example.alien_abduction.domain.GameMode
 import com.example.alien_abduction.ui.theme.AlienabductionTheme
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier, onModeChosen: (GameMode) -> Unit = {}) {
-    Scaffold(
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    onModeChosen: (GameMode) -> Unit = {}
+) {
+    Column(
+        verticalArrangement = Arrangement.Top,
         modifier = modifier
-            .fillMaxSize(),
-        containerColor = MaterialTheme.colorScheme.background
-    ) { innerPadding ->
-        Column(
-            verticalArrangement = Arrangement.SpaceAround,
+            .fillMaxSize()
+    ) {
+        Image(
+            painterResource(R.drawable.splash_art),
+            "Alien Abduction Splash Art",
             modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-        ) {
-            Image(
-                painterResource(R.drawable.splash_art),
-                "Alien Abduction Splash Art",
-                modifier = Modifier
-                    .padding(top = 10.dp)
-            )
-            GameModeList(onModeChosen = { onModeChosen(it) })
-            Spacer(modifier = Modifier.height(40.dp))
-        }
+                .padding(top = 25.dp)
+        )
+        GameModeList(onModeChosen = { onModeChosen(it) })
     }
-}
-
-@Composable
-fun TopBar(){
 
 }
 
@@ -58,11 +51,11 @@ fun GameModeList(
 ) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.SpaceAround,
+        verticalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxWidth()
-            .height(240.dp)
-            .padding(start = 30.dp, end = 30.dp,)
+            .height(260.dp)
+            .padding(horizontal = 30.dp,)
     ) {
         Text(
             text = "Wähle einen Spielmodus",
@@ -73,21 +66,28 @@ fun GameModeList(
             onClick = { onModeChosen(GameMode.CLASSIC) },
             modifier = Modifier
                 .fillMaxWidth()
+                .height(45.dp)
         )
         MainGameButton(
             "Erkunden",
             onClick = { onModeChosen(GameMode.EXPLORE) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(45.dp)
         )
         MainGameButton(
             "Mehrspieler",
             onClick = { onModeChosen(GameMode.MULTIPLAYER) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(45.dp)
         )
         MainGameButton(
             "Herausforderungen",
             onClick = { onModeChosen(GameMode.CHALLENGE) },
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(45.dp)
         )
     }
 }

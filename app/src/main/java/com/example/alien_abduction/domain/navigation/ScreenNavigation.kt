@@ -11,3 +11,12 @@ data class GameSetup(val gameMode: GameMode)
 
 @Serializable
 object ProfileScreen
+
+@Serializable
+object GameHistoryScreen
+
+@Serializable
+object AchievementsScreen
+
+@Serializable
+object StreetViewScreen

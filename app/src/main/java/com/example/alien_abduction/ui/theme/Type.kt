@@ -72,6 +72,13 @@ val Typography = Typography(
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
+    bodyMedium = TextStyle(
+        fontFamily = AlienBodyFont,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp,
+        lineHeight = 26.sp,
+        letterSpacing = 0.4.sp
+    ),
     titleLarge = TextStyle(
         fontFamily = AlienBodyFont,
         fontWeight = FontWeight.W700,
@@ -86,18 +93,22 @@ val Typography = Typography(
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
-    headlineMedium = TextStyle(
-        fontFamily = AlienHeadingFont,
-        fontWeight = FontWeight.Normal,
-        fontSize = 25.sp,
-        lineHeight = 24.sp,
-        letterSpacing = 0.5.sp
-    ),
     headlineLarge = TextStyle(
         fontFamily = AlienHeadingFont,
         fontWeight = FontWeight.Normal,
         fontSize = 28.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
+    ),
+    headlineMedium = TextStyle(
+        fontFamily = AlienBodyFont,
+        fontWeight = FontWeight.ExtraBold,
+        fontSize = 24.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
     )
 )
+
+// Extension properties for custom styles
+val Typography.bodyMediumBold: TextStyle
+    get() = bodyMedium.copy(fontWeight = FontWeight.Bold)

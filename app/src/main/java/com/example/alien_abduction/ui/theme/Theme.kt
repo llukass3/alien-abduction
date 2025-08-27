@@ -11,11 +11,11 @@ private val AlienColorScheme = darkColorScheme(
     primary = AlienWhite,
     secondary = AlienGreen,
     background = AlienBlack,
-    surface = AlienDarkGray,
+    surface = AlienWhite,
     onPrimary = AlienBlack,
     onSecondary = AlienWhite,
     onBackground = AlienWhite,
-    onSurface = AlienWhite,
+    onSurface = AlienBlack,
 )
 
 @Composable
