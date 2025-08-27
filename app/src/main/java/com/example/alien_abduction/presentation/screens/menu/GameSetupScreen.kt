@@ -37,7 +37,7 @@ fun GameSetupScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 30.dp)
+                .padding(top = 25.dp)
         ) {
             Text(
                 text = mode.name,

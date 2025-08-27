@@ -1,5 +1,6 @@
 package com.example.alien_abduction.presentation.customComposables
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
