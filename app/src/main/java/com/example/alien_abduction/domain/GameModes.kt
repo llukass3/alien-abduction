@@ -45,6 +45,6 @@ data class Challenge (
     override val name: String = "Herausforderung",
     override val mode: GameMode = GameMode.CHALLENGE,
     override val descriptionRes: Int = R.string.game_mode_challenge_description,
-    val challenges: List<CustomChallenge> = listOf(),
+    //val challenges: List<CustomChallenge> = listOf(),
 ) : GameModes
 

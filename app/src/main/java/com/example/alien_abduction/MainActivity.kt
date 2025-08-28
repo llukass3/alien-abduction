@@ -26,6 +26,7 @@ import com.example.alien_abduction.domain.navigation.HomeScreen
 import com.example.alien_abduction.domain.navigation.ProfileScreen
 import com.example.alien_abduction.domain.navigation.StreetViewScreen
 import com.example.alien_abduction.presentation.customComposables.BottomNavBar
+import com.example.alien_abduction.presentation.screens.game.StreetViewScreen
 import com.example.alien_abduction.presentation.screens.menu.AchievementsScreen
 import com.example.alien_abduction.presentation.screens.menu.GameHistoryScreen
 import com.example.alien_abduction.presentation.screens.menu.GameSetupScreen
@@ -72,14 +73,21 @@ class MainActivity : ComponentActivity() {
                     ) {
                         composable<HomeScreen> {
                             HomeScreen(
+                                modifier = Modifier.padding(innerPadding),
                                 onModeChosen = { navController.navigate(GameSetup(it)) },
-                                modifier = Modifier.padding(innerPadding))
+                            )
                         }
                         composable<GameSetup> {
                             val args = it.toRoute<GameSetup>()
                             GameSetupScreen(
                                 modifier = Modifier.padding(innerPadding),
                                 mode = GameModes.fromMode(args.gameMode),
+                                onGameLaunch = { navController.navigate(StreetViewScreen) }
+                            )
+                        }
+                        composable<StreetViewScreen> {
+                            StreetViewScreen(
+                                modifier = Modifier.padding(innerPadding)
                             )
                         }
                         composable<ProfileScreen> {

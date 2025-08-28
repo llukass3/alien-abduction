@@ -23,13 +23,18 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.alien_abduction.R
+import com.example.alien_abduction.domain.viewModels.AchievementsViewModel
 import com.example.alien_abduction.presentation.customComposables.MainGameCard
 import com.example.alien_abduction.ui.theme.AlienGreen
 import com.example.alien_abduction.ui.theme.AlienabductionTheme
 
 @Composable
 fun AchievementsScreen(modifier: Modifier = Modifier) {
+
+    val viewModel: AchievementsViewModel = viewModel()
+
     Column(
         modifier = modifier
             .fillMaxSize()
