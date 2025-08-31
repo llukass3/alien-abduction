@@ -1,5 +1,6 @@
 package com.example.alien_abduction.domain.navigation
 
+import com.example.alien_abduction.domain.GameConfiguration
 import com.example.alien_abduction.domain.GameMode
 import kotlinx.serialization.Serializable
 
@@ -19,4 +20,4 @@ object GameHistoryScreen
 object AchievementsScreen
 
 @Serializable
-object StreetViewScreen
+data class MainGameScreen(val gameConfiguration: GameConfiguration)

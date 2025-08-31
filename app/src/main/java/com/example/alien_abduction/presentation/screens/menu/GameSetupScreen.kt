@@ -18,16 +18,22 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.alien_abduction.domain.Explore
+import com.example.alien_abduction.domain.GameConfiguration
 import com.example.alien_abduction.domain.GameMode
-import com.example.alien_abduction.domain.GameModes
+import com.example.alien_abduction.domain.viewModels.GameSetupViewModel
+import com.example.alien_abduction.presentation.gameModes.ChallengeGameSetup
+import com.example.alien_abduction.presentation.gameModes.ClassicGameSetup
+import com.example.alien_abduction.presentation.gameModes.ExploreGameSetup
+import com.example.alien_abduction.presentation.gameModes.MultiplayerGameSetup
 import com.example.alien_abduction.ui.theme.AlienabductionTheme
 
 @Composable
 fun GameSetupScreen(
     modifier: Modifier = Modifier,
-    mode: GameModes,
-    modeSpecificContent: @Composable () -> Unit = {},
-    onGameLaunch: () -> Unit = {}
+    viewModel: GameSetupViewModel,
+    onGameLaunch: (gameConfiguration: GameConfiguration) -> Unit = {}
 ) {
     Box(modifier = modifier
         .fillMaxSize()
@@ -40,21 +46,33 @@ fun GameSetupScreen(
                 .padding(top = 25.dp)
         ) {
             Text(
-                text = mode.name,
+                text = viewModel.gameModeData.name,
                 style = MaterialTheme.typography.headlineLarge,
                 modifier = Modifier.padding(bottom = 20.dp)
             )
 
             Text(
-                text = stringResource(id = mode.descriptionRes),
+                text = stringResource(id = viewModel.gameModeData.descriptionRes),
                 style = MaterialTheme.typography.bodyLarge
             )
-            modeSpecificContent()
+            Box(
+                modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .padding(bottom = 100.dp, top = 16.dp)
+            ) {
+                when (viewModel.gameMode) {
+                    GameMode.CLASSIC -> ClassicGameSetup()
+                    GameMode.EXPLORE -> ExploreGameSetup()
+                    GameMode.MULTIPLAYER -> MultiplayerGameSetup()
+                    GameMode.CHALLENGE -> ChallengeGameSetup()
+                }
+            }
         }
 
         //start game button
         Button(
-            onClick = { onGameLaunch() },
+            onClick = { onGameLaunch(viewModel.buildGameConfiguration()) },
             content = {
                 Text(text = "Start", fontSize = 25.sp)
             },
@@ -69,17 +87,19 @@ fun GameSetupScreen(
         )
     }
 }
-
+/*
 @Preview
 @Composable
 fun GameSetupPreview() {
     AlienabductionTheme {
+        val mode = GameMode.EXPLORE
         Scaffold { innerPadding ->
             GameSetupScreen(
                 modifier = Modifier.padding(innerPadding),
-                mode = GameModes.fromMode(GameMode.CHALLENGE),
+                viewModel = GameSetupViewModel(mode)
             )
         }
     }
 }
+*/
 

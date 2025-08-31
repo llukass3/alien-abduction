@@ -13,20 +13,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.example.alien_abduction.domain.GameModes
 import com.example.alien_abduction.domain.navigation.AchievementsScreen
 import com.example.alien_abduction.domain.navigation.GameHistoryScreen
 import com.example.alien_abduction.domain.navigation.GameSetup
 import com.example.alien_abduction.domain.navigation.HomeScreen
 import com.example.alien_abduction.domain.navigation.ProfileScreen
-import com.example.alien_abduction.domain.navigation.StreetViewScreen
+import com.example.alien_abduction.domain.navigation.MainGameScreen
+import com.example.alien_abduction.domain.viewModels.GameSetupViewModel
+import com.example.alien_abduction.domain.viewModels.GameSetupViewModelFactory
+import com.example.alien_abduction.domain.viewModels.MainGameViewModel
+import com.example.alien_abduction.domain.viewModels.MainGameViewModelFactory
 import com.example.alien_abduction.presentation.customComposables.BottomNavBar
-import com.example.alien_abduction.presentation.screens.game.StreetViewScreen
+import com.example.alien_abduction.presentation.screens.game.MainGameScreen
 import com.example.alien_abduction.presentation.screens.menu.AchievementsScreen
 import com.example.alien_abduction.presentation.screens.menu.GameHistoryScreen
 import com.example.alien_abduction.presentation.screens.menu.GameSetupScreen
@@ -53,8 +57,7 @@ class MainActivity : ComponentActivity() {
                     bottomBar = {
                         //filter all screens where bottom nav bar should not be shown
                         val showBottomBar = when {
-                            currentScreen == StreetViewScreen::class.qualifiedName -> false
-                            //currentScreen?.startsWith(GameSetup::class.qualifiedName!!) == true -> true
+                            currentScreen?.startsWith(MainGameScreen::class.qualifiedName!!) == true -> false
                             else -> true
                         }
 
@@ -74,20 +77,26 @@ class MainActivity : ComponentActivity() {
                         composable<HomeScreen> {
                             HomeScreen(
                                 modifier = Modifier.padding(innerPadding),
-                                onModeChosen = { navController.navigate(GameSetup(it)) },
+                                onModeChosen = { gameMode -> navController.navigate(GameSetup(gameMode)) },
                             )
                         }
                         composable<GameSetup> {
                             val args = it.toRoute<GameSetup>()
                             GameSetupScreen(
                                 modifier = Modifier.padding(innerPadding),
-                                mode = GameModes.fromMode(args.gameMode),
-                                onGameLaunch = { navController.navigate(StreetViewScreen) }
+                                viewModel = viewModel<GameSetupViewModel>(
+                                    factory = GameSetupViewModelFactory(args.gameMode)
+                                ),
+                                onGameLaunch = { gameConfig -> navController.navigate(MainGameScreen(gameConfig)) }
                             )
                         }
-                        composable<StreetViewScreen> {
-                            StreetViewScreen(
-                                modifier = Modifier.padding(innerPadding)
+                        composable<MainGameScreen> {
+                            val args = it.toRoute<MainGameScreen>()
+                            MainGameScreen(
+                                modifier = Modifier.padding(innerPadding),
+                                viewModel = viewModel<MainGameViewModel>(
+                                    factory = MainGameViewModelFactory(args.gameConfiguration)
+                                )
                             )
                         }
                         composable<ProfileScreen> {

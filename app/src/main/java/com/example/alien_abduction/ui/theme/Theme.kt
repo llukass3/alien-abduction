@@ -13,7 +13,7 @@ private val AlienColorScheme = darkColorScheme(
     background = AlienBlack,
     surface = AlienWhite,
     onPrimary = AlienBlack,
-    onSecondary = AlienWhite,
+    onSecondary = AlienBlack,
     onBackground = AlienWhite,
     onSurface = AlienBlack,
 )
