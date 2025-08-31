@@ -42,7 +42,6 @@ class GameSetupViewModel(val gameMode: GameMode): ViewModel() {
             _countdown.value = value
     }
 
-
     fun buildGameConfiguration(): GameConfiguration {
         return GameConfiguration(
             mode = gameMode,

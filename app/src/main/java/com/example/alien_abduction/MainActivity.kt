@@ -19,12 +19,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.example.alien_abduction.domain.GameConfiguration
 import com.example.alien_abduction.domain.navigation.AchievementsScreen
 import com.example.alien_abduction.domain.navigation.GameHistoryScreen
 import com.example.alien_abduction.domain.navigation.GameSetup
 import com.example.alien_abduction.domain.navigation.HomeScreen
-import com.example.alien_abduction.domain.navigation.ProfileScreen
 import com.example.alien_abduction.domain.navigation.MainGameScreen
+import com.example.alien_abduction.domain.navigation.ProfileScreen
 import com.example.alien_abduction.domain.viewModels.GameSetupViewModel
 import com.example.alien_abduction.domain.viewModels.GameSetupViewModelFactory
 import com.example.alien_abduction.domain.viewModels.MainGameViewModel
@@ -37,6 +38,8 @@ import com.example.alien_abduction.presentation.screens.menu.GameSetupScreen
 import com.example.alien_abduction.presentation.screens.menu.HomeScreen
 import com.example.alien_abduction.presentation.screens.menu.ProfileScreen
 import com.example.alien_abduction.ui.theme.AlienabductionTheme
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 
 class MainActivity : ComponentActivity() {
@@ -74,29 +77,12 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         startDestination = HomeScreen
                     ) {
+
+                        /* menu-related screens */
                         composable<HomeScreen> {
                             HomeScreen(
                                 modifier = Modifier.padding(innerPadding),
                                 onModeChosen = { gameMode -> navController.navigate(GameSetup(gameMode)) },
-                            )
-                        }
-                        composable<GameSetup> {
-                            val args = it.toRoute<GameSetup>()
-                            GameSetupScreen(
-                                modifier = Modifier.padding(innerPadding),
-                                viewModel = viewModel<GameSetupViewModel>(
-                                    factory = GameSetupViewModelFactory(args.gameMode)
-                                ),
-                                onGameLaunch = { gameConfig -> navController.navigate(MainGameScreen(gameConfig)) }
-                            )
-                        }
-                        composable<MainGameScreen> {
-                            val args = it.toRoute<MainGameScreen>()
-                            MainGameScreen(
-                                modifier = Modifier.padding(innerPadding),
-                                viewModel = viewModel<MainGameViewModel>(
-                                    factory = MainGameViewModelFactory(args.gameConfiguration)
-                                )
                             )
                         }
                         composable<ProfileScreen> {
@@ -114,6 +100,30 @@ class MainActivity : ComponentActivity() {
                         composable<AchievementsScreen> {
                             AchievementsScreen(
                                 modifier = Modifier.padding(innerPadding)
+                            )
+                        }
+
+                        /* game-related screens */
+                        composable<GameSetup> {
+                            val args = it.toRoute<GameSetup>()
+                            GameSetupScreen(
+                                modifier = Modifier.padding(innerPadding),
+                                viewModel = viewModel<GameSetupViewModel>(
+                                    factory = GameSetupViewModelFactory(args.gameMode)
+                                ),
+                                onGameLaunch = { gameConfiguration ->
+                                    val gameConfigJson = Json.encodeToString(gameConfiguration)
+                                    navController.navigate(MainGameScreen(gameConfigJson)) }
+                            )
+                        }
+                        composable<MainGameScreen> {
+                            val args = it.toRoute<MainGameScreen>()
+                            val gameConfiguration = Json.decodeFromString<GameConfiguration>(args.gameConfigJson)
+                            MainGameScreen(
+                                modifier = Modifier.padding(innerPadding),
+                                viewModel = viewModel<MainGameViewModel>(
+                                    factory = MainGameViewModelFactory(gameConfiguration)
+                                )
                             )
                         }
                     }

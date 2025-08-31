@@ -23,6 +23,7 @@ import com.example.alien_abduction.domain.Explore
 import com.example.alien_abduction.domain.GameConfiguration
 import com.example.alien_abduction.domain.GameMode
 import com.example.alien_abduction.domain.viewModels.GameSetupViewModel
+import com.example.alien_abduction.domain.viewModels.demoGameConfig
 import com.example.alien_abduction.presentation.gameModes.ChallengeGameSetup
 import com.example.alien_abduction.presentation.gameModes.ClassicGameSetup
 import com.example.alien_abduction.presentation.gameModes.ExploreGameSetup
@@ -72,7 +73,7 @@ fun GameSetupScreen(
 
         //start game button
         Button(
-            onClick = { onGameLaunch(viewModel.buildGameConfiguration()) },
+            onClick = { onGameLaunch(/*viewModel.buildGameConfiguration()*/ demoGameConfig) },
             content = {
                 Text(text = "Start", fontSize = 25.sp)
             },
