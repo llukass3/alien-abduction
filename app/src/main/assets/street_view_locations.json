@@ -1,0 +1,104 @@
+{
+  "streetViewLocations" : [
+    {
+      "id"       : "0001",
+      "latitude" : "50.8284",
+      "longitude": "7.1216"
+    },
+    {
+      "id"       : "0002",
+      "latitude" : "50.9417",
+      "longitude": "6.9557"
+    },
+    {
+      "id"       : "0003",
+      "latitude" : "-37.8453",
+      "longitude": "144.9434"
+    },
+    {
+      "id"       : "0004",
+      "latitude" : "-43.5309",
+      "longitude": "172.627612"
+    },
+    {
+      "id"       : "0005",
+      "latitude" : "40.3999",
+      "longitude": "-3.6940"
+    },
+    {
+      "id"       : "0006",
+      "latitude" : "32.7881",
+      "longitude": "-96.7977"
+    },
+    {
+      "id"       : "0007",
+      "latitude" : "-33.9260",
+      "longitude": "18.4252"
+    },
+    {
+      "id"       : "0008",
+      "latitude" : "-34.6094",
+      "longitude": "-58.3873"
+    },
+    {
+      "id"       : "0009",
+      "latitude" : "22.5703",
+      "longitude": "88.3499"
+    },
+    {
+      "id"       : "0010",
+      "latitude" : "33.8948",
+      "longitude": "35.5065"
+    },
+    {
+      "id"       : "0011",
+      "latitude" : "35.1493",
+      "longitude": "33.3495"
+    },
+    {
+      "id"       : "0012",
+      "latitude" : "41.0205",
+      "longitude": "29.0074"
+    },
+    {
+      "id"       : "0013",
+      "latitude" : "47.4995",
+      "longitude": "19.0548"
+    },
+    {
+      "id"       : "0014",
+      "latitude" : "47.5576",
+      "longitude": "7.5883"
+    },
+    {
+      "id"       : "0015",
+      "latitude" : "53.4069",
+      "longitude": "-2.9786"
+    },
+    {
+      "id"       : "0016",
+      "latitude" : "43.8174",
+      "longitude": "7.7773"
+    },
+    {
+      "id"       : "0017",
+      "latitude" : "43.7343",
+      "longitude": "7.4203"
+    },
+    {
+      "id"       : "0018",
+      "latitude" : "43.9370",
+      "longitude": "12.4497"
+    },
+    {
+      "id"       : "0019",
+      "latitude" : "29.9751",
+      "longitude": "31.1447"
+    },
+    {
+      "id"       : "0020",
+      "latitude" : "40.4412",
+      "longitude": "-79.9856"
+    }
+  ]
+}

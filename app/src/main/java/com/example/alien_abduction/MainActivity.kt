@@ -19,32 +19,38 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.example.alien_abduction.domain.GameConfiguration
+import com.example.alien_abduction.domain.dataModels.GameConfiguration
 import com.example.alien_abduction.domain.navigation.AchievementsScreen
 import com.example.alien_abduction.domain.navigation.GameHistoryScreen
 import com.example.alien_abduction.domain.navigation.GameSetup
 import com.example.alien_abduction.domain.navigation.HomeScreen
 import com.example.alien_abduction.domain.navigation.MainGameScreen
 import com.example.alien_abduction.domain.navigation.ProfileScreen
-import com.example.alien_abduction.domain.viewModels.GameSetupViewModel
-import com.example.alien_abduction.domain.viewModels.GameSetupViewModelFactory
-import com.example.alien_abduction.domain.viewModels.MainGameViewModel
-import com.example.alien_abduction.domain.viewModels.MainGameViewModelFactory
-import com.example.alien_abduction.presentation.customComposables.BottomNavBar
-import com.example.alien_abduction.presentation.screens.game.MainGameScreen
-import com.example.alien_abduction.presentation.screens.menu.AchievementsScreen
-import com.example.alien_abduction.presentation.screens.menu.GameHistoryScreen
-import com.example.alien_abduction.presentation.screens.menu.GameSetupScreen
-import com.example.alien_abduction.presentation.screens.menu.HomeScreen
-import com.example.alien_abduction.presentation.screens.menu.ProfileScreen
+import com.example.alien_abduction.presentation.viewModels.GameSetupViewModel
+import com.example.alien_abduction.presentation.viewModels.GameSetupViewModelFactory
+import com.example.alien_abduction.presentation.viewModels.MainGameViewModel
+import com.example.alien_abduction.presentation.viewModels.MainGameViewModelFactory
+import com.example.alien_abduction.presentation.composables.customComposables.BottomNavBar
+import com.example.alien_abduction.presentation.composables.screens.game.MainGameScreen
+import com.example.alien_abduction.presentation.composables.screens.menu.AchievementsScreen
+import com.example.alien_abduction.presentation.composables.screens.menu.GameHistoryScreen
+import com.example.alien_abduction.presentation.composables.screens.menu.GameSetupScreen
+import com.example.alien_abduction.presentation.composables.screens.menu.HomeScreen
+import com.example.alien_abduction.presentation.composables.screens.menu.ProfileScreen
 import com.example.alien_abduction.ui.theme.AlienabductionTheme
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import com.example.alien_abduction.data.StreetViewLocationsRepositoryImpl
+import com.example.alien_abduction.domain.useCases.GetStreetViewLocationsUseCase
 
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val repository = StreetViewLocationsRepositoryImpl(this)
+        val useCase = GetStreetViewLocationsUseCase(repository)
+
         enableEdgeToEdge(
             //Set system bars background color to transparent
             statusBarStyle = SystemBarStyle.dark(scrim = Color.TRANSPARENT),
@@ -122,7 +128,7 @@ class MainActivity : ComponentActivity() {
                             MainGameScreen(
                                 modifier = Modifier.padding(innerPadding),
                                 viewModel = viewModel<MainGameViewModel>(
-                                    factory = MainGameViewModelFactory(gameConfiguration)
+                                    factory = MainGameViewModelFactory(gameConfiguration, useCase)
                                 )
                             )
                         }

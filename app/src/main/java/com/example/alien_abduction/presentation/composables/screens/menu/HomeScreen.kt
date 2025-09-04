@@ -1,4 +1,4 @@
-package com.example.alien_abduction.presentation.screens.menu
+package com.example.alien_abduction.presentation.composables.screens.menu
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -20,7 +20,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.alien_abduction.R
-import com.example.alien_abduction.presentation.customComposables.MainGameButton
+import com.example.alien_abduction.presentation.composables.customComposables.MainGameButton
 import com.example.alien_abduction.domain.GameMode
 import com.example.alien_abduction.ui.theme.AlienabductionTheme
 

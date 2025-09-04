@@ -1,4 +1,4 @@
-package com.example.alien_abduction.domain.viewModels
+package com.example.alien_abduction.presentation.viewModels
 
 import androidx.lifecycle.ViewModel
 

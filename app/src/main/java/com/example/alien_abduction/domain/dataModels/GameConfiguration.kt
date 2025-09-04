@@ -1,5 +1,6 @@
-package com.example.alien_abduction.domain
+package com.example.alien_abduction.domain.dataModels
 
+import com.example.alien_abduction.domain.GameMode
 import kotlinx.serialization.Serializable
 
 @Serializable

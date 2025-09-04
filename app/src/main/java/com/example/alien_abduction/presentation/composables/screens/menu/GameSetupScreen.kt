@@ -1,4 +1,4 @@
-package com.example.alien_abduction.presentation.screens.menu
+package com.example.alien_abduction.presentation.composables.screens.menu
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,26 +9,22 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.alien_abduction.domain.Explore
-import com.example.alien_abduction.domain.GameConfiguration
+import com.example.alien_abduction.domain.dataModels.GameConfiguration
 import com.example.alien_abduction.domain.GameMode
-import com.example.alien_abduction.domain.viewModels.GameSetupViewModel
-import com.example.alien_abduction.domain.viewModels.demoGameConfig
-import com.example.alien_abduction.presentation.gameModes.ChallengeGameSetup
-import com.example.alien_abduction.presentation.gameModes.ClassicGameSetup
-import com.example.alien_abduction.presentation.gameModes.ExploreGameSetup
-import com.example.alien_abduction.presentation.gameModes.MultiplayerGameSetup
-import com.example.alien_abduction.ui.theme.AlienabductionTheme
+import com.example.alien_abduction.presentation.viewModels.GameSetupViewModel
+import com.example.alien_abduction.presentation.viewModels.demoGameConfig
+import com.example.alien_abduction.presentation.composables.gameModes.ChallengeGameSetup
+import com.example.alien_abduction.presentation.composables.gameModes.ClassicGameSetup
+import com.example.alien_abduction.presentation.composables.gameModes.ExploreGameSetup
+import com.example.alien_abduction.presentation.composables.gameModes.MultiplayerGameSetup
+import com.example.alien_abduction.presentation.viewModels.demoGameConfigRandomLocation
 
 @Composable
 fun GameSetupScreen(
@@ -73,7 +69,7 @@ fun GameSetupScreen(
 
         //start game button
         Button(
-            onClick = { onGameLaunch(/*viewModel.buildGameConfiguration()*/ demoGameConfig) },
+            onClick = { onGameLaunch(/*viewModel.buildGameConfiguration()*/ demoGameConfigRandomLocation) },
             content = {
                 Text(text = "Start", fontSize = 25.sp)
             },

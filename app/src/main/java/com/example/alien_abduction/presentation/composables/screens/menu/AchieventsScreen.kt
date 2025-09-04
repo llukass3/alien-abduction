@@ -1,4 +1,4 @@
-package com.example.alien_abduction.presentation.screens.menu
+package com.example.alien_abduction.presentation.composables.screens.menu
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -25,8 +25,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.alien_abduction.R
-import com.example.alien_abduction.domain.viewModels.AchievementsViewModel
-import com.example.alien_abduction.presentation.customComposables.MainGameCard
+import com.example.alien_abduction.presentation.viewModels.AchievementsViewModel
+import com.example.alien_abduction.presentation.composables.customComposables.MainGameCard
 import com.example.alien_abduction.ui.theme.AlienGreen
 import com.example.alien_abduction.ui.theme.AlienabductionTheme
 

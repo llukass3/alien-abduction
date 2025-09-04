@@ -1,10 +1,9 @@
-package com.example.alien_abduction.domain.viewModels
+package com.example.alien_abduction.presentation.viewModels
 
 import androidx.lifecycle.ViewModel
-import com.example.alien_abduction.domain.GameConfiguration
+import com.example.alien_abduction.domain.dataModels.GameConfiguration
 import com.example.alien_abduction.domain.GameMode
 import com.example.alien_abduction.domain.GameModeData
-import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
