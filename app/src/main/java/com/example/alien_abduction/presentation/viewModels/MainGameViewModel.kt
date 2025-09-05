@@ -22,19 +22,28 @@ class MainGameViewModel(
         private const val TAG = "MainGameViewModel"
     }
 
+    //The status of the current location. OK if street view data is available, NOT_FOUND otherwise
     private var _streetViewStatus = MutableStateFlow(Status.NOT_FOUND)
     val streetViewStatus = _streetViewStatus.asStateFlow()
 
+    //collection of locations with available street view data
     private val _locations = MutableStateFlow<List<StreetViewLocation>>(emptyList())
     val locations = _locations.asStateFlow()
 
+    //collection of locations already used in this game to avoid repeating locations
+    private var _usedLocationIds = MutableStateFlow<MutableList<String>>(mutableListOf())
+
+    //the initial location of the street view panorama
     private val _initialLocation = MutableStateFlow<LatLng?>(null)
     val initialLocation = _initialLocation.asStateFlow()
 
-    private var _usedLocationIds = MutableStateFlow<MutableList<String>>(mutableListOf())
-
+    //the time left in the game. Null if the game has no time limit
     private val _timeLeft = MutableStateFlow(gameConfiguration.countdown)
     val timeLeft = _timeLeft.asStateFlow()
+
+    //the currently guessed location on the google map
+    private val _currentGuess = MutableStateFlow<LatLng?>(null)
+    val currentGuess = _currentGuess.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -87,5 +96,13 @@ class MainGameViewModel(
             }
         }
     }
+
+    fun setCurrentGuess(latLng: LatLng) {
+        _currentGuess.value = latLng
+    }
+
+    /*fun generateGameResult(): GameResult {
+
+    }*/
 
 }

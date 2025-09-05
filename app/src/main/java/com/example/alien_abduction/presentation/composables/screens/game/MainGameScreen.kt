@@ -1,7 +1,7 @@
 package com.example.alien_abduction.presentation.composables.screens.game
 
+import android.widget.Toast
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -9,6 +9,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
@@ -29,31 +30,35 @@ import com.google.maps.android.compose.streetview.StreetView
 import com.google.maps.android.compose.streetview.rememberStreetViewCameraPositionState
 import com.google.maps.android.ktx.MapsExperimentalFeature
 import kotlinx.coroutines.launch
-import com.google.maps.android.StreetViewUtils.Companion.fetchStreetViewData
-import com.example.alien_abduction.BuildConfig
 import com.example.alien_abduction.ui.theme.AlienabductionTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.ui.draw.clip
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.alien_abduction.presentation.viewModels.MainGameViewModel
 import com.google.android.gms.maps.model.CameraPosition
-import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.rememberCameraPositionState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.LocalContext
+import com.example.alien_abduction.presentation.composables.customComposables.mapComposables.MainGameMap
 
 @OptIn(MapsExperimentalFeature::class)
 @Composable
 fun MainGameScreen(
     modifier: Modifier = Modifier,
-    viewModel: MainGameViewModel
+    viewModel: MainGameViewModel,
+    onGuessFinished: () -> Unit = {}
 ) {
     val initialLocation by viewModel.initialLocation.collectAsState()
     val streetViewStatus by viewModel.streetViewStatus.collectAsState()
     var isMapOpened by remember { mutableStateOf(false) }
+    val currentGuess by viewModel.currentGuess.collectAsState()
 
     val streetViewCamera = rememberStreetViewCameraPositionState()
     val mapsCamera = rememberCameraPositionState {
@@ -89,21 +94,14 @@ fun MainGameScreen(
             )
 
             if(isMapOpened) {
-                Box(
+                MainGameMap(
                     modifier = Modifier
                         .matchParentSize()
-                        .background(Color.Black.copy(alpha = 0.5f))
-                        .clickable { isMapOpened = false }
-                ) {
-                    GoogleMap(
-                        modifier = Modifier
-                            .matchParentSize()
-                            .padding(horizontal = 15.dp, vertical = 70.dp)
-                            .clip(shape = RoundedCornerShape(25.dp))
-                            .border(width = 3.5.dp, color = MaterialTheme.colorScheme.secondary, shape = RoundedCornerShape(25.dp)),
-                        cameraPositionState = mapsCamera
-                    )
-                }
+                        .background(Color.Black.copy(alpha = 0.5f)),
+                    cameraPositionState = mapsCamera,
+                    onMapClick = {viewModel.setCurrentGuess(it)},
+                    currentGuess = currentGuess
+                )
             }
 
             CountdownCounter(modifier = Modifier
@@ -111,26 +109,92 @@ fun MainGameScreen(
                 .padding(top = 10.dp)
             )
 
-            Button(
-                onClick = { isMapOpened= !isMapOpened },
+            Box(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 10.dp)
                     .height(50.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                ),
-                elevation = ButtonDefaults.buttonElevation(defaultElevation = 10.dp),
-                content = {
-                    Text(text = "Guess", style = MaterialTheme.typography.headlineLarge)
+            ) {
+                val context = LocalContext.current
+                GuessButton(
+                    modifier = Modifier,
+                    onClick = {
+                        when {
+                            isMapOpened && currentGuess == null -> {
+                                Toast.makeText(
+                                    context,
+                                    "Keinen Standort ausgewählt",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                            isMapOpened && currentGuess != null -> {
+                                onGuessFinished()
+                            }
+                            else -> {
+                                isMapOpened = true
+                            }
+                        }
+                    }
+                )
+                if (isMapOpened) {
+                    CloseMapButton(
+                        modifier = Modifier
+                            .size(50.dp)
+                            .align(Alignment.Center)
+                            .offset(120.dp),
+                        onClick = { isMapOpened = false }
+                    )
                 }
-            )
+            }
+
+
         }
         else {
-            Text("Location not found", modifier = Modifier.align(Alignment.Center))
+            Text("Loading Location", modifier = Modifier.align(Alignment.Center))
         }
 
+    }
+}
+
+
+
+@Composable
+fun GuessButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
+) {
+    Button(
+        onClick = onClick,
+        modifier = modifier,
+        colors = ButtonDefaults.buttonColors(
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
+        ),
+        elevation = ButtonDefaults.buttonElevation(defaultElevation = 10.dp),
+        content = {
+            Text(text = "Guess", style = MaterialTheme.typography.headlineLarge)
+        }
+    )
+}
+
+@Composable
+fun CloseMapButton(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit
+) {
+    IconButton(
+        modifier = modifier,
+        onClick = onClick,
+        colors = IconButtonDefaults.iconButtonColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            contentColor = MaterialTheme.colorScheme.onPrimary
+        )
+    ) {
+        Icon(
+            imageVector = Icons.Default.Close,
+            contentDescription = "Close",
+            tint = Color.Black
+        )
     }
 }
 
@@ -159,10 +223,44 @@ fun CountdownCounter(modifier: Modifier = Modifier) {
 fun StreetViewScreenPreview() {
     AlienabductionTheme {
         Scaffold { innerPadding ->
-            MainGameScreen(
-                modifier = Modifier.padding(innerPadding),
-                viewModel = viewModel<MainGameViewModel>()
-            )
+            Box(
+                modifier = Modifier
+                    .padding(innerPadding)
+                    .fillMaxSize(),
+            ) {
+                CountdownCounter(modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .padding(top = 10.dp)
+                )
+
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .padding(bottom = 10.dp)
+                        .height(50.dp),
+                ) {
+                    GuessButton(
+                        modifier = Modifier
+                    )
+                    IconButton(
+                        modifier = Modifier
+                            .size(50.dp)
+                            .align(Alignment.Center)
+                            .offset(100.dp),
+                        onClick = {},
+                        colors = IconButtonDefaults.iconButtonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = "Close",
+                            tint = Color.Black
+                        )
+                    }
+                }
+            }
         }
     }
 }

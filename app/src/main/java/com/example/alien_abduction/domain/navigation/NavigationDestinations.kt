@@ -20,3 +20,6 @@ object AchievementsScreen
 
 @Serializable
 data class MainGameScreen(val gameConfigJson: String)
+
+@Serializable
+object ResultScreen

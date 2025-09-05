@@ -1,4 +1,4 @@
-package com.example.alien_abduction.domain
+package com.example.alien_abduction.domain.dataModels
 
 data class GameResult(
     val proximity: Double,

@@ -41,7 +41,9 @@ import com.example.alien_abduction.ui.theme.AlienabductionTheme
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import com.example.alien_abduction.data.StreetViewLocationsRepositoryImpl
+import com.example.alien_abduction.domain.navigation.ResultScreen
 import com.example.alien_abduction.domain.useCases.GetStreetViewLocationsUseCase
+import com.example.alien_abduction.presentation.composables.screens.game.ResultScreen
 
 
 class MainActivity : ComponentActivity() {
@@ -129,7 +131,13 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier.padding(innerPadding),
                                 viewModel = viewModel<MainGameViewModel>(
                                     factory = MainGameViewModelFactory(gameConfiguration, useCase)
-                                )
+                                ),
+                                onGuessFinished = { navController.navigate(ResultScreen) }
+                            )
+                        }
+                        composable<ResultScreen> {
+                            ResultScreen(
+                                modifier = Modifier.padding(innerPadding)
                             )
                         }
                     }
