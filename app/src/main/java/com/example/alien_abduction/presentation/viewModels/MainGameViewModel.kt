@@ -12,6 +12,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import com.google.maps.android.StreetViewUtils.Companion.fetchStreetViewData
 import com.example.alien_abduction.BuildConfig
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 
 class MainGameViewModel(
     private val gameConfiguration: GameConfiguration,
@@ -37,9 +39,17 @@ class MainGameViewModel(
     private val _initialLocation = MutableStateFlow<LatLng?>(null)
     val initialLocation = _initialLocation.asStateFlow()
 
+    private val _currentRound = MutableStateFlow(1)
+    val currentRound = _currentRound.asStateFlow()
+
+    val maxRounds = gameConfiguration.numberOfRounds
+
     //the time left in the game. Null if the game has no time limit
     private val _timeLeft = MutableStateFlow(gameConfiguration.countdown)
     val timeLeft = _timeLeft.asStateFlow()
+
+    private val _timerFinished = MutableStateFlow(false)
+    val timerFinished = _timerFinished.asStateFlow()
 
     //the currently guessed location on the google map
     private val _currentGuess = MutableStateFlow<LatLng?>(null)
@@ -59,6 +69,14 @@ class MainGameViewModel(
             }
             else {
                 selectRandomLocation()
+            }
+            if (gameConfiguration.countdown != null) {
+                startTimer(
+                    gameConfiguration.countdown,
+                    onTimerFinished = {
+                        _timerFinished.value = true
+                    }
+                )
             }
         }
 
@@ -94,6 +112,42 @@ class MainGameViewModel(
                     break
                 }
             }
+        }
+    }
+
+    private var timerJob: Job? = null
+    private fun startTimer(
+        initialTime: Float?,
+        onTimerFinished: () -> Unit = {}
+    ) {
+        if (initialTime == null) return
+        timerJob?.cancel()
+        timerJob = viewModelScope.launch {
+            var timeLeftSeconds = initialTime
+            while (timeLeftSeconds > 0f) {
+                delay(1000L)
+                timeLeftSeconds -= 1f
+                _timeLeft.value = timeLeftSeconds.coerceAtLeast(0f)
+                if (timeLeftSeconds <= 0f) {
+                    _timeLeft.value = 0f
+                    onTimerFinished()
+                    break
+                }
+            }
+        }
+    }
+
+    private fun stopTimer() {
+        timerJob?.cancel()
+        timerJob = null
+    }
+
+    private fun resetTimer() {
+        stopTimer()
+        val initialTime = gameConfiguration.countdown
+        if (initialTime != null) {
+            _timeLeft.value = initialTime
+            startTimer(initialTime)
         }
     }
 

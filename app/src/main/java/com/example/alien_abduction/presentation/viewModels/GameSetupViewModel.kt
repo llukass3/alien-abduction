@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.example.alien_abduction.domain.dataModels.GameConfiguration
 import com.example.alien_abduction.domain.GameMode
 import com.example.alien_abduction.domain.GameModeData
+import com.example.alien_abduction.domain.dataModels.CustomScenario
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -25,6 +26,17 @@ class GameSetupViewModel(val gameMode: GameMode): ViewModel() {
 
     private val _initialLongitude = MutableStateFlow<Double?>(null)
     val initialLongitude = _initialLongitude.asStateFlow()
+
+    private val _customScenarios = MutableStateFlow(listOf<CustomScenario>())
+    val customScenarios = _customScenarios.asStateFlow()
+
+    init {
+        when (gameMode) {
+            GameMode.MULTIPLAYER -> {_numberOfPlayers.value = 2}
+            GameMode.CHALLENGE -> {}
+            else -> {}
+        }
+    }
 
     fun setNumberOfPlayers(value: Int) {
         if (value in 2..4)

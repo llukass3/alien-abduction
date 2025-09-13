@@ -1,4 +1,4 @@
-package com.example.alien_abduction.presentation.viewModels
+package com.example.alien_abduction.presentation.sampleData
 
 import com.example.alien_abduction.domain.dataModels.GameConfiguration
 import com.example.alien_abduction.domain.GameMode
@@ -18,5 +18,5 @@ val demoGameConfigRandomLocation = GameConfiguration(
     initialLongitude = null,
     numberOfPlayers = 1,
     numberOfRounds = 1,
-    countdown = 60f
+    countdown = 10f
 )

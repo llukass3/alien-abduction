@@ -93,6 +93,13 @@ val Typography = Typography(
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
+    labelMedium = TextStyle(
+        fontFamily = AlienBodyFont,
+        fontWeight = FontWeight.Medium,
+        fontSize = 14.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
     headlineLarge = TextStyle(
         fontFamily = AlienHeadingFont,
         fontWeight = FontWeight.Normal,

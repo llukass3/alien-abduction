@@ -31,7 +31,7 @@ import com.example.alien_abduction.presentation.viewModels.GameSetupViewModelFac
 import com.example.alien_abduction.presentation.viewModels.MainGameViewModel
 import com.example.alien_abduction.presentation.viewModels.MainGameViewModelFactory
 import com.example.alien_abduction.presentation.composables.customComposables.BottomNavBar
-import com.example.alien_abduction.presentation.composables.screens.game.MainGameScreen
+import com.example.alien_abduction.presentation.composables.screens.mainGameScreen.MainGameScreen
 import com.example.alien_abduction.presentation.composables.screens.menu.AchievementsScreen
 import com.example.alien_abduction.presentation.composables.screens.menu.GameHistoryScreen
 import com.example.alien_abduction.presentation.composables.screens.menu.GameSetupScreen
@@ -43,7 +43,7 @@ import kotlinx.serialization.json.Json
 import com.example.alien_abduction.data.StreetViewLocationsRepositoryImpl
 import com.example.alien_abduction.domain.navigation.ResultScreen
 import com.example.alien_abduction.domain.useCases.GetStreetViewLocationsUseCase
-import com.example.alien_abduction.presentation.composables.screens.game.ResultScreen
+import com.example.alien_abduction.presentation.composables.screens.menu.ResultScreen
 
 
 class MainActivity : ComponentActivity() {

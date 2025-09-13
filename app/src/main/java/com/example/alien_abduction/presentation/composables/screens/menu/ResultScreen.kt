@@ -1,4 +1,4 @@
-package com.example.alien_abduction.presentation.composables.screens.game
+package com.example.alien_abduction.presentation.composables.screens.menu
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 @Composable
 fun ResultScreen(
     modifier: Modifier = Modifier
+
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         Text(modifier = Modifier.align(Alignment.Center), text = "Result Screen")

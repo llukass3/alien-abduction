@@ -1,0 +1,181 @@
+package com.example.alien_abduction.presentation.composables.screens.mainGameScreen
+
+import androidx.compose.foundation.background
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.dp
+import com.google.android.gms.maps.StreetViewPanoramaOptions
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.Status
+import com.google.maps.android.compose.streetview.StreetView
+import com.google.maps.android.compose.streetview.rememberStreetViewCameraPositionState
+import com.google.maps.android.ktx.MapsExperimentalFeature
+import kotlinx.coroutines.launch
+import com.example.alien_abduction.ui.theme.AlienabductionTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Close
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.ui.graphics.Color
+import com.example.alien_abduction.presentation.viewModels.MainGameViewModel
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.maps.android.compose.rememberCameraPositionState
+import androidx.compose.runtime.collectAsState
+
+@OptIn(MapsExperimentalFeature::class)
+@Composable
+fun MainGameScreen(
+    modifier: Modifier = Modifier,
+    viewModel: MainGameViewModel,
+    onGuessFinished: () -> Unit = {}
+) {
+    val initialLocation by viewModel.initialLocation.collectAsState()
+    val streetViewStatus by viewModel.streetViewStatus.collectAsState()
+    val currentGuess by viewModel.currentGuess.collectAsState()
+
+    val currentRound by viewModel.currentRound.collectAsState()
+    val timeLeft by viewModel.timeLeft.collectAsState()
+    val timerFinished by viewModel.timerFinished.collectAsState()
+
+    var isMapOpened by remember { mutableStateOf(false) }
+    if (timerFinished) isMapOpened = true
+
+    val streetViewCamera = rememberStreetViewCameraPositionState()
+    val mapsCamera = rememberCameraPositionState {
+        position = CameraPosition.fromLatLngZoom(LatLng(41.0, 6.0), 0f)
+    }
+
+    LaunchedEffect(streetViewCamera) {
+        launch {
+            snapshotFlow { streetViewCamera.panoramaCamera }
+                .collect {
+
+                }
+        }
+        launch {
+            snapshotFlow { streetViewCamera.location }
+                .collect {
+
+                }
+        }
+    }
+    Box(
+        modifier = modifier
+            .fillMaxSize(),
+    ) {
+        if (streetViewStatus == Status.OK) {
+
+            //street view that the player navigates while trying to guess the location
+            StreetView(
+                Modifier.matchParentSize(),
+                cameraPositionState = streetViewCamera,
+                isStreetNamesEnabled = false,
+                streetViewPanoramaOptionsFactory = {
+                    StreetViewPanoramaOptions()
+                        .position(initialLocation)
+                },
+            )
+
+            //google map, where the player guesses the current location
+            if(isMapOpened) {
+                MainGameMap(
+                    modifier = Modifier
+                        .matchParentSize()
+                        .background(Color.Black.copy(alpha = 0.5f)),
+                    cameraPositionState = mapsCamera,
+                    onMapClick = {viewModel.setCurrentGuess(it)},
+                    currentGuess = currentGuess
+                )
+            }
+
+            //top bar, shows current round, countdown and current player
+            TopGameBar(
+                modifier = Modifier
+                    .align(Alignment.TopCenter)
+                    .fillMaxWidth()
+                    .padding(start = 15.dp, end = 15.dp, top = 10.dp)
+                    .height(60.dp),
+                timeLeft = timeLeft,
+                currentRound = currentRound,
+                maxRounds = viewModel.maxRounds
+            )
+
+            //bottom bar, displays the "guess" button, which opens the Map
+            BottomGameBar(
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .fillMaxWidth()
+                    .padding(start = 15.dp, end = 15.dp, bottom = 10.dp)
+                    .height(60.dp),
+                isMapOpened = isMapOpened,
+                currentGuess = currentGuess,
+                timerFinished = timerFinished,
+                onGuessFinished = onGuessFinished,
+                openMap = { isMapOpened = true },
+                closeMap = { isMapOpened = false }
+            )
+        }
+        else {
+            Text("Loading Location", modifier = Modifier.align(Alignment.Center))
+        }
+
+    }
+}
+
+@Preview
+@Composable
+fun StreetViewScreenPreview() {
+    AlienabductionTheme {
+        Scaffold(
+
+        ) { innerPadding ->
+            Box(modifier = Modifier.padding(innerPadding).fillMaxSize()) {
+
+                TopGameBar(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .fillMaxWidth()
+                        .height(60.dp)
+                        .padding(start = 15.dp, end = 15.dp, top = 10.dp),
+                    timeLeft = 20f,
+                    currentRound = 1,
+                    maxRounds = 5
+                )
+
+                BottomGameBar(
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .fillMaxWidth()
+                        .height(60.dp)
+                        .padding(start = 15.dp, end = 15.dp, bottom = 10.dp),
+                    isMapOpened = false,
+                    timerFinished = false,
+                    onGuessFinished = { },
+                    openMap = { },
+                    closeMap = { }
+                )
+
+            }
+        }
+    }
+}

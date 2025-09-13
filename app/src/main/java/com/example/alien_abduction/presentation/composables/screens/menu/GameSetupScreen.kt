@@ -9,22 +9,26 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.alien_abduction.domain.dataModels.GameConfiguration
 import com.example.alien_abduction.domain.GameMode
 import com.example.alien_abduction.presentation.viewModels.GameSetupViewModel
-import com.example.alien_abduction.presentation.viewModels.demoGameConfig
 import com.example.alien_abduction.presentation.composables.gameModes.ChallengeGameSetup
 import com.example.alien_abduction.presentation.composables.gameModes.ClassicGameSetup
 import com.example.alien_abduction.presentation.composables.gameModes.ExploreGameSetup
 import com.example.alien_abduction.presentation.composables.gameModes.MultiplayerGameSetup
-import com.example.alien_abduction.presentation.viewModels.demoGameConfigRandomLocation
+import com.example.alien_abduction.presentation.sampleData.demoGameConfigRandomLocation
+import com.example.alien_abduction.presentation.viewModels.GameSetupViewModelFactory
+import com.example.alien_abduction.ui.theme.AlienabductionTheme
 
 @Composable
 fun GameSetupScreen(
@@ -84,7 +88,7 @@ fun GameSetupScreen(
         )
     }
 }
-/*
+
 @Preview
 @Composable
 fun GameSetupPreview() {
@@ -93,10 +97,11 @@ fun GameSetupPreview() {
         Scaffold { innerPadding ->
             GameSetupScreen(
                 modifier = Modifier.padding(innerPadding),
-                viewModel = GameSetupViewModel(mode)
+                viewModel = viewModel<GameSetupViewModel>(
+                    factory = GameSetupViewModelFactory(mode)
+                )
             )
         }
     }
 }
-*/
 
