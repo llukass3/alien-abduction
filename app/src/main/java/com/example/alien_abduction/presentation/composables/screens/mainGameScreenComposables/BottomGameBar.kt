@@ -1,4 +1,4 @@
-package com.example.alien_abduction.presentation.composables.screens.mainGameScreen
+package com.example.alien_abduction.presentation.composables.screens.mainGameScreenComposables
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Box

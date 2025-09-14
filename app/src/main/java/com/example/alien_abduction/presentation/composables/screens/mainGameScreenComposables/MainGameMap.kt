@@ -1,4 +1,4 @@
-package com.example.alien_abduction.presentation.composables.screens.mainGameScreen
+package com.example.alien_abduction.presentation.composables.screens.mainGameScreenComposables
 
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -17,6 +17,7 @@ import com.google.maps.android.compose.ComposeMapColorScheme
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.rememberUpdatedMarkerState
+
 
 @Composable
 fun MainGameMap(

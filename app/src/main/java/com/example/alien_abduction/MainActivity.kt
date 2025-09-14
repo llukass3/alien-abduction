@@ -31,7 +31,7 @@ import com.example.alien_abduction.presentation.viewModels.GameSetupViewModelFac
 import com.example.alien_abduction.presentation.viewModels.MainGameViewModel
 import com.example.alien_abduction.presentation.viewModels.MainGameViewModelFactory
 import com.example.alien_abduction.presentation.composables.customComposables.BottomNavBar
-import com.example.alien_abduction.presentation.composables.screens.mainGameScreen.MainGameScreen
+import com.example.alien_abduction.presentation.composables.screens.mainGameScreenComposables.MainGameScreen
 import com.example.alien_abduction.presentation.composables.screens.menu.AchievementsScreen
 import com.example.alien_abduction.presentation.composables.screens.menu.GameHistoryScreen
 import com.example.alien_abduction.presentation.composables.screens.menu.GameSetupScreen
@@ -69,6 +69,7 @@ class MainActivity : ComponentActivity() {
                         //filter all screens where bottom nav bar should not be shown
                         val showBottomBar = when {
                             currentScreen?.startsWith(MainGameScreen::class.qualifiedName!!) == true -> false
+                            currentScreen?.startsWith(ResultScreen::class.qualifiedName!!) == true -> false
                             else -> true
                         }
 
@@ -137,7 +138,8 @@ class MainActivity : ComponentActivity() {
                         }
                         composable<ResultScreen> {
                             ResultScreen(
-                                modifier = Modifier.padding(innerPadding)
+                                modifier = Modifier.padding(innerPadding),
+                                onReturnToMenu = { navController.navigate(HomeScreen) }
                             )
                         }
                     }

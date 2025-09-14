@@ -1,9 +1,9 @@
 package com.example.alien_abduction.presentation.viewModels
 
 import androidx.lifecycle.ViewModel
-import com.example.alien_abduction.domain.dataModels.GameResult
+import com.example.alien_abduction.domain.dataModels.PlayerResult
 
-class ResultScreenViewModel(gameResult: GameResult) : ViewModel() {
+class ResultScreenViewModel(playerResult: PlayerResult) : ViewModel() {
 
 
 }

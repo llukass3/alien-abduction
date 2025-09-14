@@ -1,4 +1,4 @@
-package com.example.alien_abduction.presentation.composables.screens.mainGameScreen
+package com.example.alien_abduction.presentation.composables.screens.mainGameScreenComposables
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.alien_abduction.domain.util.formatSecondsToMMSS
 import java.util.Locale
 
 @Composable
@@ -76,13 +77,6 @@ fun CountdownCounter(
             modifier = Modifier.align(Alignment.Center)
         )
     }
-}
-
-fun formatSecondsToMMSS(seconds: Float): String {
-    val totalSeconds = seconds.toInt()
-    val minutes = totalSeconds / 60
-    val secs = totalSeconds % 60
-    return String.format(Locale.US, "%02d:%02d", minutes, secs)
 }
 
 @Composable
