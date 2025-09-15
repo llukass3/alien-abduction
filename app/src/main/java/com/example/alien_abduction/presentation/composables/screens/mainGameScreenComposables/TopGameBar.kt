@@ -24,29 +24,33 @@ fun TopGameBar(
     timeLeft: Float? = null,
     currentRound: Int,
     maxRounds: Int,
-    currentPlayer: Player
+    currentPlayer: Player,
+    displayRoundCounter: Boolean = true,
+    displayCurrentPlayer: Boolean = true
 ) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween,
+    Box(
         modifier = modifier
             .fillMaxSize()
     ) {
+        if(displayRoundCounter)
         RoundCounter(
             modifier = Modifier
-                .size(width = 80.dp, height = 40.dp),
+                .size(width = 80.dp, height = 40.dp)
+                .align(Alignment.CenterStart),
             currentRound = currentRound,
             maxRounds = maxRounds
         )
 
         CountdownCounter(
-            modifier = Modifier,
-            timeLeft = timeLeft
+            modifier = Modifier.align(Alignment.Center),
+            timeLeft = timeLeft,
         )
 
+        if(displayCurrentPlayer)
         CurrentPlayerLabel(
             modifier = Modifier
-                .size(width = 80.dp, height = 40.dp),
+                .size(width = 80.dp, height = 40.dp)
+                .align(Alignment.CenterEnd),
             currentPlayer = currentPlayer.nickname,
             playerColor = currentPlayer.slot.color
         )

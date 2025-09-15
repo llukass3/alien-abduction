@@ -7,6 +7,7 @@ import com.example.alien_abduction.domain.GameModeData
 import com.example.alien_abduction.domain.PlayerSlot
 import com.example.alien_abduction.domain.dataModels.CustomScenario
 import com.example.alien_abduction.domain.dataModels.Player
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -34,6 +35,14 @@ class GameSetupViewModel(val gameMode: GameMode): ViewModel() {
     private val _customScenarios = MutableStateFlow(listOf<CustomScenario>())
     val customScenarios = _customScenarios.asStateFlow()
 
+    init {
+        when (gameMode) {
+            GameMode.CLASSIC -> {_countdown.value = 180f}
+            GameMode.EXPLORE -> {}
+            GameMode.MULTIPLAYER -> {_countdown.value = 180f}
+            GameMode.CHALLENGE -> {}
+        }
+    }
 
     fun addPlayer(player: Player) {
         _players.value += player
@@ -53,14 +62,19 @@ class GameSetupViewModel(val gameMode: GameMode): ViewModel() {
             _countdown.value = value
     }
 
+    fun setInitialLocation(location: LatLng) {
+
+    }
+
     fun buildGameConfiguration(): GameConfiguration {
         return GameConfiguration(
             mode = gameMode,
-            initialLatitude = null,
-            initialLongitude = null,
+            initialLatitude = _initialLatitude.value,
+            initialLongitude = _initialLatitude.value,
             players = players.value,
             numberOfRounds = numberOfRounds.value,
             countdown = countdown.value,
         )
     }
+
 }

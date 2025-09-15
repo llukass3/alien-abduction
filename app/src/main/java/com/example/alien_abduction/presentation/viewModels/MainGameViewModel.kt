@@ -18,7 +18,7 @@ import com.example.alien_abduction.domain.useCases.SelectRandomLocationUseCase
 import com.example.alien_abduction.domain.useCases.TimerUseCase
 
 class MainGameViewModel(
-    private val gameConfiguration: GameConfiguration,
+    val gameConfiguration: GameConfiguration,
     private val getStreetViewLocationsUseCase: GetStreetViewLocationsUseCase,
     private val selectRandomLocationUseCase: SelectRandomLocationUseCase,
     private val timerUseCase: TimerUseCase

@@ -1,5 +1,7 @@
 package com.example.alien_abduction.presentation.composables.screens.mainGameScreenComposables
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -29,6 +31,8 @@ import com.example.alien_abduction.presentation.viewModels.MainGameViewModel
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.rememberCameraPositionState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
+import androidx.compose.ui.draw.alpha
 import com.example.alien_abduction.domain.PlayerSlot
 import com.example.alien_abduction.domain.dataModels.GameData
 import com.example.alien_abduction.domain.dataModels.Player
@@ -96,7 +100,8 @@ fun MainGameScreen(
                         .background(Color.Black.copy(alpha = 0.5f)),
                     cameraPositionState = mapsCamera,
                     onMapClick = {viewModel.setCurrentGuess(it)},
-                    currentGuess = currentGuess
+                    currentGuess = currentGuess,
+                    currentPlayer = currentPlayer
                 )
             }
 
@@ -110,7 +115,9 @@ fun MainGameScreen(
                 timeLeft = timeLeft,
                 currentRound = currentRound,
                 maxRounds = viewModel.maxRounds,
-                currentPlayer = currentPlayer
+                currentPlayer = currentPlayer,
+                displayRoundCounter = viewModel.maxRounds > 1,
+                displayCurrentPlayer = viewModel.gameConfiguration.players.size > 1
             )
 
             //bottom bar, displays the "guess" button, which opens the Map
@@ -142,6 +149,41 @@ fun MainGameScreen(
     }
 }
 
+@Composable
+fun PlayerPreview(
+    modifier: Modifier,
+    player: Player,
+    fadeOutDurationMillis: Int = 1000, // Adjustable duration, default 1s
+    startFadeOut: Boolean = false      // Control when to start fade out
+) {
+    // Animatable for alpha value
+    val alpha = remember { Animatable(1f) }
+
+    // Start fade out when startFadeOut is true
+    LaunchedEffect(startFadeOut) {
+        if (startFadeOut) {
+            alpha.animateTo(
+                targetValue = 0f,
+                animationSpec = tween(durationMillis = fadeOutDurationMillis)
+            )
+        } else {
+            alpha.snapTo(1f)
+        }
+    }
+
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .background(player.slot.color)
+            .alpha(alpha.value) // Apply alpha for fade-out
+    ) {
+        Text(
+            text = player.nickname,
+            modifier = Modifier.align(Alignment.Center),
+        )
+    }
+}
+
 @Preview
 @Composable
 fun StreetViewScreenPreview() {
@@ -160,7 +202,9 @@ fun StreetViewScreenPreview() {
                     timeLeft = 20f,
                     currentRound = 1,
                     maxRounds = 5,
-                    currentPlayer = Player(PlayerSlot.PLAYER_1, "Lukas")
+                    currentPlayer = Player(PlayerSlot.PLAYER_1, "Lukas"),
+                    displayRoundCounter = true,
+                    displayCurrentPlayer = true
                 )
 
                 BottomGameBar(
@@ -175,7 +219,6 @@ fun StreetViewScreenPreview() {
                     openMap = { },
                     closeMap = { }
                 )
-
             }
         }
     }

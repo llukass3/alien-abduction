@@ -27,6 +27,7 @@ import androidx.compose.ui.unit.sp
 import com.example.alien_abduction.R
 import com.example.alien_abduction.domain.PlayerSlot
 import com.example.alien_abduction.domain.dataModels.PlayerGuess
+import com.example.alien_abduction.domain.util.getPlayerMarker
 import com.example.alien_abduction.presentation.composables.customComposables.MainGameButton
 import com.example.alien_abduction.presentation.sampleData.demoGameData
 import com.example.alien_abduction.presentation.viewModels.ResultScreenViewModel
@@ -84,16 +85,10 @@ fun ResultScreen(
             viewModel.gameData.playerGuesses.forEach {
 
                 val playerGuess = LatLng(it.latitude, it.longitude)
-                val playerMarker = when (it.playerSlot) {
-                    PlayerSlot.PLAYER_1 -> R.drawable.marker_blue
-                    PlayerSlot.PLAYER_2 -> R.drawable.marker_red
-                    PlayerSlot.PLAYER_3 -> R.drawable.marker_green
-                    PlayerSlot.PLAYER_4 -> R.drawable.marker_yellow
-                }
 
                 AdvancedMarker(
                     state = rememberUpdatedMarkerState(position = playerGuess),
-                    icon = BitmapDescriptorFactory.fromResource(playerMarker)
+                    icon = BitmapDescriptorFactory.fromResource(getPlayerMarker(it.playerSlot))
                 )
 
                 Polyline(

@@ -70,7 +70,7 @@ fun GameSetupScreen(
 
         //start game button
         Button(
-            onClick = { onGameLaunch(/*viewModel.buildGameConfiguration()*/ demoGameConfigMultiplayerRandomLocation) },
+            onClick = { onGameLaunch(viewModel.buildGameConfiguration())},
             content = {
                 Text(text = "Start", fontSize = 25.sp)
             },

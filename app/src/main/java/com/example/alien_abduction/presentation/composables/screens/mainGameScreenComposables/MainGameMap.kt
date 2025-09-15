@@ -9,6 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
+import com.example.alien_abduction.domain.dataModels.Player
+import com.example.alien_abduction.domain.util.getPlayerMarker
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.PinConfig
 import com.google.maps.android.compose.AdvancedMarker
@@ -24,7 +27,8 @@ fun MainGameMap(
     modifier: Modifier = Modifier,
     cameraPositionState: CameraPositionState,
     onMapClick: (LatLng) -> Unit = {},
-    currentGuess: LatLng?
+    currentGuess: LatLng?,
+    currentPlayer: Player
 ) {
     Box(
         modifier = modifier
@@ -45,9 +49,7 @@ fun MainGameMap(
                 val markerState = rememberUpdatedMarkerState(position = it)
                 AdvancedMarker(
                     state = markerState,
-                    pinConfig = PinConfig.builder()
-                        .setBackgroundColor(android.graphics.Color.BLACK)
-                        .build()
+                    icon = BitmapDescriptorFactory.fromResource(getPlayerMarker(currentPlayer.slot))
                 )
             }
         }
