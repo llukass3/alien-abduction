@@ -22,3 +22,12 @@ val demoGameConfigRandomLocation = GameConfiguration(
     numberOfRounds = 1,
     countdown = 10f
 )
+
+val demoGameConfigMultiplayerRandomLocation = GameConfiguration(
+    mode = GameMode.MULTIPLAYER,
+    initialLatitude = null,
+    initialLongitude = null,
+    players = listOf(Player(PlayerSlot.PLAYER_1, "Lukas"), Player(PlayerSlot.PLAYER_2, "Beyoncé")),
+    numberOfRounds = 1,
+    countdown = 180f
+)

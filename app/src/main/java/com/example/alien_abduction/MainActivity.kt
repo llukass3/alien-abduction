@@ -43,7 +43,6 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import com.example.alien_abduction.data.StreetViewLocationsRepositoryImpl
 import com.example.alien_abduction.domain.dataModels.GameData
-import com.example.alien_abduction.domain.dataModels.PlayerGuess
 import com.example.alien_abduction.domain.navigation.ResultScreen
 import com.example.alien_abduction.domain.useCases.GetStreetViewLocationsUseCase
 import com.example.alien_abduction.domain.useCases.SelectRandomLocationUseCase
@@ -148,7 +147,7 @@ class MainActivity : ComponentActivity() {
                                         timerUseCase
                                     )
                                 ),
-                                onGuessFinished = { gameData ->
+                                onGameComplete = { gameData ->
                                     val gameDataJson = Json.encodeToString(gameData)
                                     navController.navigate(ResultScreen(gameDataJson))
                                 }

@@ -51,7 +51,7 @@ fun BottomGameBar(
         )
 
         var buttonColors by remember { mutableStateOf(regularButtonColors) }
-        if (currentGuess != null) buttonColors = onGuessButtonColors
+        buttonColors = if (currentGuess != null && isMapOpened) onGuessButtonColors else regularButtonColors
 
         GuessButton(
             modifier = Modifier.align(Alignment.Center),

@@ -13,9 +13,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
@@ -32,26 +29,28 @@ import com.example.alien_abduction.presentation.viewModels.MainGameViewModel
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.rememberCameraPositionState
 import androidx.compose.runtime.collectAsState
+import com.example.alien_abduction.domain.PlayerSlot
 import com.example.alien_abduction.domain.dataModels.GameData
-import com.example.alien_abduction.domain.dataModels.PlayerGuess
+import com.example.alien_abduction.domain.dataModels.Player
 
 @OptIn(MapsExperimentalFeature::class)
 @Composable
 fun MainGameScreen(
     modifier: Modifier = Modifier,
     viewModel: MainGameViewModel,
-    onGuessFinished: (GameData) -> Unit = {}
+    onGameComplete: (GameData) -> Unit = {}
 ) {
     val initialLocation by viewModel.initialLocation.collectAsState()
     val streetViewStatus by viewModel.streetViewStatus.collectAsState()
     val currentGuess by viewModel.currentGuess.collectAsState()
+    val currentPlayer by viewModel.currentPlayer.collectAsState()
 
     val currentRound by viewModel.currentRound.collectAsState()
     val timeLeft by viewModel.timeLeft.collectAsState()
     val timerFinished by viewModel.timerFinished.collectAsState()
 
-    var isMapOpened by remember { mutableStateOf(false) }
-    if (timerFinished) isMapOpened = true
+    val isMapOpened by viewModel.isMapOpened.collectAsState()
+    if (timerFinished) viewModel.setMapState(true)
 
     val streetViewCamera = rememberStreetViewCameraPositionState()
     val mapsCamera = rememberCameraPositionState {
@@ -110,7 +109,8 @@ fun MainGameScreen(
                     .height(60.dp),
                 timeLeft = timeLeft,
                 currentRound = currentRound,
-                maxRounds = viewModel.maxRounds
+                maxRounds = viewModel.maxRounds,
+                currentPlayer = currentPlayer
             )
 
             //bottom bar, displays the "guess" button, which opens the Map
@@ -123,9 +123,16 @@ fun MainGameScreen(
                 isMapOpened = isMapOpened,
                 currentGuess = currentGuess,
                 timerFinished = timerFinished,
-                onGuessFinished = { onGuessFinished(viewModel.buildGameData()!!) },
-                openMap = { isMapOpened = true },
-                closeMap = { isMapOpened = false }
+                onGuessFinished = {
+                    //save current guess
+                    viewModel.saveCurrentGuess()
+                    //move to next player, if one exists or end game and expose game data
+                    if(viewModel.hasNextPlayer())
+                        viewModel.nextPlayer()
+                    else onGameComplete(viewModel.buildGameData()!!)
+                },
+                openMap = { viewModel.setMapState(true) },
+                closeMap = { viewModel.setMapState(false) }
             )
         }
         else {
@@ -152,7 +159,8 @@ fun StreetViewScreenPreview() {
                         .padding(start = 15.dp, end = 15.dp, top = 10.dp),
                     timeLeft = 20f,
                     currentRound = 1,
-                    maxRounds = 5
+                    maxRounds = 5,
+                    currentPlayer = Player(PlayerSlot.PLAYER_1, "Lukas")
                 )
 
                 BottomGameBar(

@@ -50,11 +50,8 @@ fun ResultScreen(
     viewModel: ResultScreenViewModel,
     onReturnToMenu: () -> Unit = {}
 ) {
-    val guessDummy = LatLng(47.5576, 7.5883)
-    val locationDummy = LatLng(53.4069, -2.9786)
-
     val mapsCamera = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(guessDummy.latitude, guessDummy.longitude), 0f)
+        position = CameraPosition.fromLatLngZoom(viewModel.alienLocation, 0f)
     }
 
     Column(

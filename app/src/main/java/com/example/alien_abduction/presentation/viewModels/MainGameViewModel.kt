@@ -12,7 +12,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import com.google.maps.android.StreetViewUtils.Companion.fetchStreetViewData
 import com.example.alien_abduction.BuildConfig
-import com.example.alien_abduction.domain.PlayerSlot
 import com.example.alien_abduction.domain.dataModels.GameData
 import com.example.alien_abduction.domain.dataModels.PlayerGuess
 import com.example.alien_abduction.domain.useCases.SelectRandomLocationUseCase
@@ -29,6 +28,7 @@ class MainGameViewModel(
         private const val TAG = "MainGameViewModel"
     }
 
+/*--------------------------Locations-------------------------------------------------------------*/
 
     //collection of locations with available street view data
     private val _locations = MutableStateFlow<List<StreetViewLocation>>(emptyList())
@@ -49,16 +49,26 @@ class MainGameViewModel(
     private val _currentGuess = MutableStateFlow<LatLng?>(null)
     val currentGuess = _currentGuess.asStateFlow()
 
+/*--------------------------Players---------------------------------------------------------------*/
+
+    private val _currentPlayerIndex = MutableStateFlow(0)
+    private val _currentPlayer = MutableStateFlow(
+        gameConfiguration.players[_currentPlayerIndex.value]
+    )
+    val currentPlayer = _currentPlayer.asStateFlow()
+
+    private val _playerGuesses = MutableStateFlow(emptyList<PlayerGuess>())
+
+
+/*--------------------------Rounds----------------------------------------------------------------*/
 
     private val _currentRound = MutableStateFlow(1)
     val currentRound = _currentRound.asStateFlow()
 
     val maxRounds = gameConfiguration.numberOfRounds
 
-    private val _currentPlayer = MutableStateFlow(gameConfiguration.players[0])
-    val currentPlayer = _currentPlayer.asStateFlow()
 
-    playerGuesses
+/*--------------------------Timer-----------------------------------------------------------------*/
 
     //the time left in the game. Null if the game has no time limit
     private val _timeLeft = MutableStateFlow(gameConfiguration.countdown)
@@ -66,6 +76,13 @@ class MainGameViewModel(
 
     private val _timerFinished = MutableStateFlow(false)
     val timerFinished = _timerFinished.asStateFlow()
+
+/*--------------------------UI--------------------------------------------------------------------*/
+
+    private var _isMapOpened = MutableStateFlow(false)
+    val isMapOpened = _isMapOpened.asStateFlow()
+
+/*------------------------------------------------------------------------------------------------*/
 
     init {
         viewModelScope.launch {
@@ -95,6 +112,10 @@ class MainGameViewModel(
                 startTimer()
             }
         }
+    }
+
+    fun setMapState(isOpen: Boolean) {
+        _isMapOpened.value = isOpen
     }
 
     fun startTimer() {
@@ -132,6 +153,33 @@ class MainGameViewModel(
         _currentGuess.value = latLng
     }
 
+    fun hasNextPlayer(): Boolean {
+        return _currentPlayerIndex.value < gameConfiguration.players.size -1
+    }
+
+    /** moves to the next player*/
+    fun nextPlayer(){
+        setMapState(false)
+        resetTimer()
+        _currentGuess.value = null //reset current guess
+        _currentPlayerIndex.value++ //move to next player index
+        _currentPlayer.value = gameConfiguration.players[_currentPlayerIndex.value] //update current player
+
+    }
+
+    /**saves the current player guess to _playerGuesses list*/
+    fun saveCurrentGuess() {
+        if (_currentGuess.value != null) {
+            _playerGuesses.value += PlayerGuess(
+                playerSlot = currentPlayer.value.slot,
+                playerName = currentPlayer.value.nickname,
+                latitude = currentGuess.value!!.latitude,
+                longitude = currentGuess.value!!.longitude,
+                time = timeLeft.value
+            )
+        }
+    }
+
     fun buildGameData(): GameData? {
         val initialLocation = initialLocation.value
         val guessedLocation = currentGuess.value
@@ -140,15 +188,7 @@ class MainGameViewModel(
             return GameData(
                 locationLatitude = initialLocation.latitude,
                 locationLongitude = initialLocation.longitude,
-                playerGuesses = gameConfiguration.players.map {
-                    PlayerGuess(
-                        playerSlot = it.slot,
-                        playerName = it.nickname,
-                        latitude = guessedLocation.latitude,
-                        longitude = guessedLocation.longitude,
-                        time = timeLeft.value
-                    )
-                }
+                playerGuesses = _playerGuesses.value
             )
         }
         return null

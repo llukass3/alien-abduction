@@ -21,6 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.alien_abduction.domain.dataModels.GameConfiguration
 import com.example.alien_abduction.domain.GameMode
+import com.example.alien_abduction.presentation.sampleData.demoGameConfigMultiplayerRandomLocation
 import com.example.alien_abduction.presentation.viewModels.GameSetupViewModel
 import com.example.alien_abduction.presentation.sampleData.demoGameConfigRandomLocation
 import com.example.alien_abduction.presentation.viewModels.GameSetupViewModelFactory
@@ -69,7 +70,7 @@ fun GameSetupScreen(
 
         //start game button
         Button(
-            onClick = { onGameLaunch(/*viewModel.buildGameConfiguration()*/ demoGameConfigRandomLocation) },
+            onClick = { onGameLaunch(/*viewModel.buildGameConfiguration()*/ demoGameConfigMultiplayerRandomLocation) },
             content = {
                 Text(text = "Start", fontSize = 25.sp)
             },

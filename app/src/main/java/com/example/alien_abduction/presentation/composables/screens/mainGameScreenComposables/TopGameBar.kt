@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.alien_abduction.domain.dataModels.Player
 import com.example.alien_abduction.domain.util.formatSecondsToMMSS
 import java.util.Locale
 
@@ -22,7 +23,8 @@ fun TopGameBar(
     modifier: Modifier = Modifier,
     timeLeft: Float? = null,
     currentRound: Int,
-    maxRounds: Int
+    maxRounds: Int,
+    currentPlayer: Player
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -45,8 +47,8 @@ fun TopGameBar(
         CurrentPlayerLabel(
             modifier = Modifier
                 .size(width = 80.dp, height = 40.dp),
-            currentPlayer = "Lukas",
-            playerColor = Color.Blue
+            currentPlayer = currentPlayer.nickname,
+            playerColor = currentPlayer.slot.color
         )
     }
 }
