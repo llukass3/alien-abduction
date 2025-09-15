@@ -1,4 +1,4 @@
-package com.example.alien_abduction.presentation.composables.gameModes
+package com.example.alien_abduction.presentation.composables.screens.gameSetup
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

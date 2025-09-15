@@ -25,9 +25,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.alien_abduction.R
-import com.example.alien_abduction.domain.dataModels.PlayerResult
+import com.example.alien_abduction.domain.PlayerSlot
+import com.example.alien_abduction.domain.dataModels.PlayerGuess
 import com.example.alien_abduction.presentation.composables.customComposables.MainGameButton
-import com.example.alien_abduction.presentation.sampleData.demoPlayerResultLists
+import com.example.alien_abduction.presentation.sampleData.demoGameData
+import com.example.alien_abduction.presentation.viewModels.ResultScreenViewModel
 import com.example.alien_abduction.ui.theme.AlienabductionTheme
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -45,6 +47,7 @@ import com.google.maps.android.compose.rememberUpdatedMarkerState
 @Composable
 fun ResultScreen(
     modifier: Modifier = Modifier,
+    viewModel: ResultScreenViewModel,
     onReturnToMenu: () -> Unit = {}
 ) {
     val guessDummy = LatLng(47.5576, 7.5883)
@@ -75,24 +78,38 @@ fun ResultScreen(
             mapColorScheme = ComposeMapColorScheme.DARK,
             uiSettings = MapUiSettings(mapToolbarEnabled = false),
         ) {
-            Polyline(
-                points = listOf(guessDummy, locationDummy),
-                color = Color.White,
-                pattern = listOf(Dash(15f), Gap(15f)),
-            )
 
             AdvancedMarker(
-                state = rememberUpdatedMarkerState(position = guessDummy),
-                icon = BitmapDescriptorFactory.fromResource(R.drawable.marker_blue)
-            )
-            AdvancedMarker(
-                state = rememberUpdatedMarkerState(position = locationDummy),
+                state = rememberUpdatedMarkerState(position = viewModel.alienLocation),
                 icon = BitmapDescriptorFactory.fromResource(R.drawable.marker_alien)
             )
+
+            viewModel.gameData.playerGuesses.forEach {
+
+                val playerGuess = LatLng(it.latitude, it.longitude)
+                val playerMarker = when (it.playerSlot) {
+                    PlayerSlot.PLAYER_1 -> R.drawable.marker_blue
+                    PlayerSlot.PLAYER_2 -> R.drawable.marker_red
+                    PlayerSlot.PLAYER_3 -> R.drawable.marker_green
+                    PlayerSlot.PLAYER_4 -> R.drawable.marker_yellow
+                }
+
+                AdvancedMarker(
+                    state = rememberUpdatedMarkerState(position = playerGuess),
+                    icon = BitmapDescriptorFactory.fromResource(playerMarker)
+                )
+
+                Polyline(
+                    points = listOf(viewModel.alienLocation, playerGuess),
+                    color = Color.White,
+                    pattern = listOf(Dash(15f), Gap(15f)),
+                )
+            }
+
         }
 
         PlayerResultsList(
-            playerResults = demoPlayerResultLists,
+            playerGuesses = viewModel.gameData.playerGuesses,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 20.dp)
@@ -109,7 +126,7 @@ fun ResultScreen(
 @Composable
 fun PlayerResultsList(
     modifier: Modifier = Modifier,
-    playerResults: List<PlayerResult>
+    playerGuesses: List<PlayerGuess>
 ) {
     Column(
         modifier = modifier
@@ -132,9 +149,9 @@ fun PlayerResultsList(
                 Text(text = "Punkte", style = MaterialTheme.typography.bodyMedium)
             }
         }
-        playerResults.forEach {
+        playerGuesses.forEach {
             PlayerResult(
-                playerResult = it,
+                playerGuess = it,
                 modifier = Modifier.padding(vertical = 5.dp)
             )
         }
@@ -145,7 +162,7 @@ fun PlayerResultsList(
 @Composable
 fun PlayerResult(
     modifier: Modifier = Modifier,
-    playerResult: PlayerResult
+    playerGuess: PlayerGuess
 ) {
     Row(
         modifier = modifier
@@ -160,11 +177,11 @@ fun PlayerResult(
                     .size(9.dp)
                     .background(
                         shape = CircleShape,
-                        color = playerResult.player.color
+                        color = playerGuess.playerSlot.color
                     )
             )
             Text(
-                text = playerResult.playerName,
+                text = playerGuess.playerName,
                 style = MaterialTheme.typography.titleMedium
             )
         }
@@ -177,20 +194,25 @@ fun PlayerResult(
 
         Text(
             modifier = Modifier.weight(0.5f),
-            text = playerResult.points.toString(),
+            //text = playerGuess.points.toString(),
+            text = "5000",
             textAlign = TextAlign.End,
             fontSize = 20.sp
         )
     }
 }
 
-
 @Preview
 @Composable
 fun ResultScreenPreview() {
     AlienabductionTheme {
         Scaffold { innerPadding ->
-            ResultScreen(modifier = Modifier.padding(innerPadding))
+            ResultScreen(
+                viewModel = ResultScreenViewModel(
+                    gameData = demoGameData
+                ),
+                modifier = Modifier.padding(innerPadding)
+            )
         }
     }
 }

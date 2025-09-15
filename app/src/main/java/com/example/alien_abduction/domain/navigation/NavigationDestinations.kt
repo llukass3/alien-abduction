@@ -1,6 +1,7 @@
 package com.example.alien_abduction.domain.navigation
 
 import com.example.alien_abduction.domain.GameMode
+import com.example.alien_abduction.domain.dataModels.PlayerGuess
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -22,4 +23,4 @@ object AchievementsScreen
 data class MainGameScreen(val gameConfigJson: String)
 
 @Serializable
-object ResultScreen
+data class ResultScreen(val gameDataJson: String)

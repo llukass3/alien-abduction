@@ -1,4 +1,4 @@
-package com.example.alien_abduction.presentation.composables.screens.menu
+package com.example.alien_abduction.presentation.composables.screens.gameSetup
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,10 +22,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.alien_abduction.domain.dataModels.GameConfiguration
 import com.example.alien_abduction.domain.GameMode
 import com.example.alien_abduction.presentation.viewModels.GameSetupViewModel
-import com.example.alien_abduction.presentation.composables.gameModes.ChallengeGameSetup
-import com.example.alien_abduction.presentation.composables.gameModes.ClassicGameSetup
-import com.example.alien_abduction.presentation.composables.gameModes.ExploreGameSetup
-import com.example.alien_abduction.presentation.composables.gameModes.MultiplayerGameSetup
 import com.example.alien_abduction.presentation.sampleData.demoGameConfigRandomLocation
 import com.example.alien_abduction.presentation.viewModels.GameSetupViewModelFactory
 import com.example.alien_abduction.ui.theme.AlienabductionTheme

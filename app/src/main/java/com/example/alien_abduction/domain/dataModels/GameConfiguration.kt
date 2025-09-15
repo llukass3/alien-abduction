@@ -8,7 +8,7 @@ data class GameConfiguration(
     val mode: GameMode,
     val initialLatitude: Double?,
     val initialLongitude: Double?,
-    val numberOfPlayers: Int,
+    val players: List<Player>,
     val numberOfRounds: Int,
     val countdown: Float?
 )

@@ -12,25 +12,23 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import com.google.maps.android.StreetViewUtils.Companion.fetchStreetViewData
 import com.example.alien_abduction.BuildConfig
+import com.example.alien_abduction.domain.PlayerSlot
+import com.example.alien_abduction.domain.dataModels.GameData
+import com.example.alien_abduction.domain.dataModels.PlayerGuess
 import com.example.alien_abduction.domain.useCases.SelectRandomLocationUseCase
 import com.example.alien_abduction.domain.useCases.TimerUseCase
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 
 class MainGameViewModel(
     private val gameConfiguration: GameConfiguration,
     private val getStreetViewLocationsUseCase: GetStreetViewLocationsUseCase,
     private val selectRandomLocationUseCase: SelectRandomLocationUseCase,
-    //private val timerUseCase: TimerUseCase
+    private val timerUseCase: TimerUseCase
 ) : ViewModel() {
 
     companion object {
         private const val TAG = "MainGameViewModel"
     }
 
-    //The status of the current location. OK if street view data is available, NOT_FOUND otherwise
-    private var _streetViewStatus = MutableStateFlow(Status.NOT_FOUND)
-    val streetViewStatus = _streetViewStatus.asStateFlow()
 
     //collection of locations with available street view data
     private val _locations = MutableStateFlow<List<StreetViewLocation>>(emptyList())
@@ -43,10 +41,24 @@ class MainGameViewModel(
     private val _initialLocation = MutableStateFlow<LatLng?>(null)
     val initialLocation = _initialLocation.asStateFlow()
 
+    //The status of the current location. OK if street view data is available, NOT_FOUND otherwise
+    private var _streetViewStatus = MutableStateFlow(Status.NOT_FOUND)
+    val streetViewStatus = _streetViewStatus.asStateFlow()
+
+    //the currently guessed location on the google map
+    private val _currentGuess = MutableStateFlow<LatLng?>(null)
+    val currentGuess = _currentGuess.asStateFlow()
+
+
     private val _currentRound = MutableStateFlow(1)
     val currentRound = _currentRound.asStateFlow()
 
     val maxRounds = gameConfiguration.numberOfRounds
+
+    private val _currentPlayer = MutableStateFlow(gameConfiguration.players[0])
+    val currentPlayer = _currentPlayer.asStateFlow()
+
+    playerGuesses
 
     //the time left in the game. Null if the game has no time limit
     private val _timeLeft = MutableStateFlow(gameConfiguration.countdown)
@@ -54,10 +66,6 @@ class MainGameViewModel(
 
     private val _timerFinished = MutableStateFlow(false)
     val timerFinished = _timerFinished.asStateFlow()
-
-    //the currently guessed location on the google map
-    private val _currentGuess = MutableStateFlow<LatLng?>(null)
-    val currentGuess = _currentGuess.asStateFlow()
 
     init {
         viewModelScope.launch {
@@ -84,13 +92,32 @@ class MainGameViewModel(
             }
 
             if (gameConfiguration.countdown != null) {
-                startTimer(
-                    gameConfiguration.countdown,
-                    onTimerFinished = {
-                        _timerFinished.value = true
-                    }
-                )
+                startTimer()
             }
+        }
+    }
+
+    fun startTimer() {
+        gameConfiguration.countdown?.let { initialTime ->
+            timerUseCase.startTimer(
+                initialTime,
+                viewModelScope,
+                onTick = { _timeLeft.value = it },
+                onTimerFinished = { _timerFinished.value = true }
+            )
+        }
+    }
+
+    fun stopTimer() = timerUseCase.stopTimer()
+
+    fun resetTimer() {
+        gameConfiguration.countdown?.let { initialTime ->
+            timerUseCase.resetTimer(
+                initialTime,
+                viewModelScope,
+                onTick = { _timeLeft.value = it },
+                onTimerFinished = { _timerFinished.value = true }
+            )
         }
     }
 
@@ -101,48 +128,30 @@ class MainGameViewModel(
         }
    }
 
-    private var timerJob: Job? = null
-    private fun startTimer(
-        initialTime: Float?,
-        onTimerFinished: () -> Unit = {}
-    ) {
-        if (initialTime == null) return
-        timerJob?.cancel()
-        timerJob = viewModelScope.launch {
-            var timeLeftSeconds = initialTime
-            while (timeLeftSeconds > 0f) {
-                delay(1000L)
-                timeLeftSeconds -= 1f
-                _timeLeft.value = timeLeftSeconds.coerceAtLeast(0f)
-                if (timeLeftSeconds <= 0f) {
-                    _timeLeft.value = 0f
-                    onTimerFinished()
-                    break
-                }
-            }
-        }
-    }
-
-    private fun stopTimer() {
-        timerJob?.cancel()
-        timerJob = null
-    }
-
-    private fun resetTimer() {
-        stopTimer()
-        val initialTime = gameConfiguration.countdown
-        if (initialTime != null) {
-            _timeLeft.value = initialTime
-            startTimer(initialTime)
-        }
-    }
-
     fun setCurrentGuess(latLng: LatLng) {
         _currentGuess.value = latLng
     }
 
-    /*fun generateGameResult(): GameResult {
+    fun buildGameData(): GameData? {
+        val initialLocation = initialLocation.value
+        val guessedLocation = currentGuess.value
 
-    }*/
+        if(initialLocation != null && guessedLocation != null) {
+            return GameData(
+                locationLatitude = initialLocation.latitude,
+                locationLongitude = initialLocation.longitude,
+                playerGuesses = gameConfiguration.players.map {
+                    PlayerGuess(
+                        playerSlot = it.slot,
+                        playerName = it.nickname,
+                        latitude = guessedLocation.latitude,
+                        longitude = guessedLocation.longitude,
+                        time = timeLeft.value
+                    )
+                }
+            )
+        }
+        return null
+    }
 
 }

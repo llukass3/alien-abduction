@@ -32,13 +32,15 @@ import com.example.alien_abduction.presentation.viewModels.MainGameViewModel
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.rememberCameraPositionState
 import androidx.compose.runtime.collectAsState
+import com.example.alien_abduction.domain.dataModels.GameData
+import com.example.alien_abduction.domain.dataModels.PlayerGuess
 
 @OptIn(MapsExperimentalFeature::class)
 @Composable
 fun MainGameScreen(
     modifier: Modifier = Modifier,
     viewModel: MainGameViewModel,
-    onGuessFinished: () -> Unit = {}
+    onGuessFinished: (GameData) -> Unit = {}
 ) {
     val initialLocation by viewModel.initialLocation.collectAsState()
     val streetViewStatus by viewModel.streetViewStatus.collectAsState()
@@ -121,7 +123,7 @@ fun MainGameScreen(
                 isMapOpened = isMapOpened,
                 currentGuess = currentGuess,
                 timerFinished = timerFinished,
-                onGuessFinished = onGuessFinished,
+                onGuessFinished = { onGuessFinished(viewModel.buildGameData()!!) },
                 openMap = { isMapOpened = true },
                 closeMap = { isMapOpened = false }
             )

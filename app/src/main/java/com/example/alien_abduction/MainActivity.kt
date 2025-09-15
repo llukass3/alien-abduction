@@ -35,16 +35,22 @@ import com.example.alien_abduction.presentation.composables.customComposables.Bo
 import com.example.alien_abduction.presentation.composables.screens.mainGameScreenComposables.MainGameScreen
 import com.example.alien_abduction.presentation.composables.screens.menu.AchievementsScreen
 import com.example.alien_abduction.presentation.composables.screens.menu.GameHistoryScreen
-import com.example.alien_abduction.presentation.composables.screens.menu.GameSetupScreen
+import com.example.alien_abduction.presentation.composables.screens.gameSetup.GameSetupScreen
 import com.example.alien_abduction.presentation.composables.screens.menu.HomeScreen
 import com.example.alien_abduction.presentation.composables.screens.menu.ProfileScreen
 import com.example.alien_abduction.ui.theme.AlienabductionTheme
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import com.example.alien_abduction.data.StreetViewLocationsRepositoryImpl
+import com.example.alien_abduction.domain.dataModels.GameData
+import com.example.alien_abduction.domain.dataModels.PlayerGuess
 import com.example.alien_abduction.domain.navigation.ResultScreen
 import com.example.alien_abduction.domain.useCases.GetStreetViewLocationsUseCase
+import com.example.alien_abduction.domain.useCases.SelectRandomLocationUseCase
+import com.example.alien_abduction.domain.useCases.TimerUseCase
 import com.example.alien_abduction.presentation.composables.screens.menu.ResultScreen
+import com.example.alien_abduction.presentation.viewModels.ResultScreenViewModel
+import com.example.alien_abduction.presentation.viewModels.ResultScreenViewModelFactory
 
 
 class MainActivity : ComponentActivity() {
@@ -129,22 +135,38 @@ class MainActivity : ComponentActivity() {
 
                             val repository = StreetViewLocationsRepositoryImpl(LocalContext.current)
                             val getStreetViewLocationsUseCase = GetStreetViewLocationsUseCase(repository)
+                            val selectRandomLocationUseCase = SelectRandomLocationUseCase()
+                            val timerUseCase = TimerUseCase()
 
                             MainGameScreen(
                                 modifier = Modifier.padding(innerPadding),
                                 viewModel = viewModel<MainGameViewModel>(
                                     factory = MainGameViewModelFactory(
-                                        gameConfiguration = gameConfiguration,
-                                        getStreetViewLocationsUseCase = getStreetViewLocationsUseCase
+                                        gameConfiguration,
+                                        getStreetViewLocationsUseCase,
+                                        selectRandomLocationUseCase,
+                                        timerUseCase
                                     )
                                 ),
-                                onGuessFinished = { navController.navigate(ResultScreen) }
+                                onGuessFinished = { gameData ->
+                                    val gameDataJson = Json.encodeToString(gameData)
+                                    navController.navigate(ResultScreen(gameDataJson))
+                                }
                             )
                         }
+
                         composable<ResultScreen> {
+                            val args = it.toRoute<ResultScreen>()
+                            val gameData = Json.decodeFromString<GameData>(args.gameDataJson)
+
                             ResultScreen(
                                 modifier = Modifier.padding(innerPadding),
-                                onReturnToMenu = { navController.navigate(HomeScreen) }
+                                onReturnToMenu = { navController.navigate(HomeScreen) },
+                                viewModel = viewModel<ResultScreenViewModel>(
+                                    factory = ResultScreenViewModelFactory(
+                                        gameData = gameData
+                                    )
+                                )
                             )
                         }
                     }

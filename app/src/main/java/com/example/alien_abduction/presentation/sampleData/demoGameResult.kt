@@ -1,43 +1,50 @@
 package com.example.alien_abduction.presentation.sampleData
 
-import com.example.alien_abduction.domain.Player
-import com.example.alien_abduction.domain.dataModels.PlayerResult
+import com.example.alien_abduction.domain.PlayerSlot
+import com.example.alien_abduction.domain.dataModels.GameData
+import com.example.alien_abduction.domain.dataModels.PlayerGuess
 
-val demoPlayerResult = PlayerResult(
-    player = Player.PLAYER_1,
+val demoPlayerGuess = PlayerGuess(
+    playerSlot = PlayerSlot.PLAYER_1,
     playerName = "Lukas",
-    proximity = 2.0,
+    latitude = 47.5576,
+    longitude = 7.5883,
     time = 100f,
-    points = 3000
 )
 
-val demoPlayerResultLists = listOf(
-    PlayerResult(
-        player = Player.PLAYER_1,
+val demoPlayerGuessLists = listOf(
+    PlayerGuess(
+        playerSlot = PlayerSlot.PLAYER_1,
         playerName = "Lukas",
-        proximity = 2.0,
+        latitude = 47.5576,
+        longitude = 7.5883,
         time = 100f,
-        points = 3000
     ),
-    PlayerResult(
-        player = Player.PLAYER_2,
+    PlayerGuess(
+        playerSlot = PlayerSlot.PLAYER_2,
         playerName = "Beyoncé",
-        proximity = 2.0,
+        latitude = 46.5576,
+        longitude = 8.5883,
         time = 100f,
-        points = 5000
     ),
-    PlayerResult(
-        player = Player.PLAYER_3,
+    PlayerGuess(
+        playerSlot = PlayerSlot.PLAYER_3,
         playerName = "Kelly",
-        proximity = 2.0,
+        latitude = 45.5576,
+        longitude = 9.5883,
         time = 100f,
-        points = 4500
     ),
-    PlayerResult(
-        player = Player.PLAYER_4,
+    PlayerGuess(
+        playerSlot = PlayerSlot.PLAYER_4,
         playerName = "Michelle",
-        proximity = 2.0,
+        latitude = 43.5576,
+        longitude = 10.5883,
         time = 100f,
-        points = 4200
     ),
+)
+
+val demoGameData = GameData(
+    locationLatitude = 20.5576,
+    locationLongitude = 4.5883,
+    playerGuesses = listOf(demoPlayerGuess)
 )

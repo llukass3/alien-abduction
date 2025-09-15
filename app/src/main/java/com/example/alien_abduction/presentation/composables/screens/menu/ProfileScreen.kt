@@ -131,6 +131,8 @@ fun UserStats(modifier: Modifier = Modifier) {
         HorizontalDivider(color = AlienDarkGray, thickness = 1.5.dp, modifier = dividerModifier)
         UserStatsRow(label = "Bestes Ergebnis", value = "10.25",)
         HorizontalDivider(color = AlienDarkGray, thickness = 1.5.dp, modifier = dividerModifier)
+        UserStatsRow(label = "Punkte gesamt", value = "50000000",)
+        HorizontalDivider(color = AlienDarkGray, thickness = 1.5.dp, modifier = dividerModifier)
         UserStatsRow(label = "Lieblingsmodus", value = "Klassisch",)
     }
 }
