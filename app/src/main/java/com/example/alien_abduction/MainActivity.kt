@@ -12,6 +12,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
@@ -49,9 +50,6 @@ import com.example.alien_abduction.presentation.composables.screens.menu.ResultS
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        val repository = StreetViewLocationsRepositoryImpl(this)
-        val useCase = GetStreetViewLocationsUseCase(repository)
 
         enableEdgeToEdge(
             //Set system bars background color to transparent
@@ -128,10 +126,17 @@ class MainActivity : ComponentActivity() {
                         composable<MainGameScreen> {
                             val args = it.toRoute<MainGameScreen>()
                             val gameConfiguration = Json.decodeFromString<GameConfiguration>(args.gameConfigJson)
+
+                            val repository = StreetViewLocationsRepositoryImpl(LocalContext.current)
+                            val getStreetViewLocationsUseCase = GetStreetViewLocationsUseCase(repository)
+
                             MainGameScreen(
                                 modifier = Modifier.padding(innerPadding),
                                 viewModel = viewModel<MainGameViewModel>(
-                                    factory = MainGameViewModelFactory(gameConfiguration, useCase)
+                                    factory = MainGameViewModelFactory(
+                                        gameConfiguration = gameConfiguration,
+                                        getStreetViewLocationsUseCase = getStreetViewLocationsUseCase
+                                    )
                                 ),
                                 onGuessFinished = { navController.navigate(ResultScreen) }
                             )

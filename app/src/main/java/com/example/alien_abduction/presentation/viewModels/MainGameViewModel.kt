@@ -12,12 +12,16 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import com.google.maps.android.StreetViewUtils.Companion.fetchStreetViewData
 import com.example.alien_abduction.BuildConfig
+import com.example.alien_abduction.domain.useCases.SelectRandomLocationUseCase
+import com.example.alien_abduction.domain.useCases.TimerUseCase
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 
 class MainGameViewModel(
     private val gameConfiguration: GameConfiguration,
-    private val getStreetViewLocationsUseCase: GetStreetViewLocationsUseCase
+    private val getStreetViewLocationsUseCase: GetStreetViewLocationsUseCase,
+    private val selectRandomLocationUseCase: SelectRandomLocationUseCase,
+    //private val timerUseCase: TimerUseCase
 ) : ViewModel() {
 
     companion object {
@@ -68,8 +72,17 @@ class MainGameViewModel(
                     _initialLocation.value = candidate
             }
             else {
-                selectRandomLocation()
+                _initialLocation.value = selectRandomLocationUseCase(
+                    streetViewLocations = _locations.value,
+                    usedLocationIds = _usedLocationIds.value,
+                    updateValues = { status, usedId ->
+                        _streetViewStatus.value = status
+                        if (usedId != null)
+                            _usedLocationIds.value.add(usedId)
+                    }
+                )
             }
+
             if (gameConfiguration.countdown != null) {
                 startTimer(
                     gameConfiguration.countdown,
@@ -79,7 +92,6 @@ class MainGameViewModel(
                 )
             }
         }
-
     }
 
    private fun loadStreetViewLocations() {
@@ -87,33 +99,7 @@ class MainGameViewModel(
             val streetViewLocations = getStreetViewLocationsUseCase()
             _locations.value = streetViewLocations
         }
-    }
-
-    /** searches for random unused location, checks streetView availability and assigns it as current location */
-    private suspend fun selectRandomLocation() {
-        while(true) {
-            //select random location from list
-            val randomIndex: Int = (0 until _locations.value.size).random()
-            val candidate = _locations.value[randomIndex]
-
-            //check if location has already been used
-            if(!_usedLocationIds.value.contains(candidate.id)) {
-                //add location to used locations
-                _usedLocationIds.value.add(candidate.id)
-
-                //convert candidate to LatLng format
-                val candidateLatLng = LatLng(candidate.latitude, candidate.longitude)
-
-                //check whether street view data is available for the location
-                _streetViewStatus.value = fetchStreetViewData(candidateLatLng, BuildConfig.MAPS_API_KEY)
-                if(_streetViewStatus.value == Status.OK) {
-                    //assign candidate as current location
-                    _initialLocation.value = LatLng(candidate.latitude, candidate.longitude)
-                    break
-                }
-            }
-        }
-    }
+   }
 
     private var timerJob: Job? = null
     private fun startTimer(
