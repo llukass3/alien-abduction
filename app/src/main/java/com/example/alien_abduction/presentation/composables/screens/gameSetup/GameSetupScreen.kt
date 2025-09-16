@@ -51,19 +51,23 @@ fun GameSetupScreen(
 
             Text(
                 text = stringResource(id = viewModel.gameModeData.descriptionRes),
-                style = MaterialTheme.typography.bodyLarge
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier.padding(bottom = 20.dp)
             )
-            Box(
-                modifier = Modifier
+
+            val modeConfigurationModifier = Modifier
                 .weight(1f)
                 .fillMaxWidth()
                 .padding(bottom = 100.dp, top = 16.dp)
+
+            Box(
+                modifier = modeConfigurationModifier
             ) {
                 when (viewModel.gameMode) {
-                    GameMode.CLASSIC -> ClassicGameSetup()
-                    GameMode.EXPLORE -> ExploreGameSetup()
-                    GameMode.MULTIPLAYER -> MultiplayerGameSetup()
-                    GameMode.CHALLENGE -> ChallengeGameSetup()
+                    GameMode.CLASSIC -> ClassicGameSetup(modeConfigurationModifier)
+                    GameMode.EXPLORE -> ExploreGameSetup(modeConfigurationModifier)
+                    GameMode.MULTIPLAYER -> MultiplayerGameSetup(modeConfigurationModifier, viewModel)
+                    GameMode.CHALLENGE -> ChallengeGameSetup(modeConfigurationModifier)
                 }
             }
         }
@@ -90,7 +94,7 @@ fun GameSetupScreen(
 @Composable
 fun GameSetupPreview() {
     AlienabductionTheme {
-        val mode = GameMode.EXPLORE
+        val mode = GameMode.MULTIPLAYER
         Scaffold { innerPadding ->
             GameSetupScreen(
                 modifier = Modifier.padding(innerPadding),

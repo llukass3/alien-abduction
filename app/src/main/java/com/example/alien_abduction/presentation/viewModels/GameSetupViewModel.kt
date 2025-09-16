@@ -5,7 +5,7 @@ import com.example.alien_abduction.domain.dataModels.GameConfiguration
 import com.example.alien_abduction.domain.GameMode
 import com.example.alien_abduction.domain.GameModeData
 import com.example.alien_abduction.domain.PlayerSlot
-import com.example.alien_abduction.domain.dataModels.CustomScenario
+import com.example.alien_abduction.domain.dataModels.CustomLocation
 import com.example.alien_abduction.domain.dataModels.Player
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +16,7 @@ class GameSetupViewModel(val gameMode: GameMode): ViewModel() {
     val gameModeData = GameModeData.fromMode(gameMode)
 
     private val _players = MutableStateFlow(
-        listOf(Player(PlayerSlot.PLAYER_1, "Lukas"))
+        listOf(Player(PlayerSlot.PLAYER_1, "Spieler 1"))
     )
     val players = _players.asStateFlow()
 
@@ -32,7 +32,7 @@ class GameSetupViewModel(val gameMode: GameMode): ViewModel() {
     private val _initialLongitude = MutableStateFlow<Double?>(null)
     val initialLongitude = _initialLongitude.asStateFlow()
 
-    private val _customScenarios = MutableStateFlow(listOf<CustomScenario>())
+    private val _customScenarios = MutableStateFlow(listOf<CustomLocation>())
     val customScenarios = _customScenarios.asStateFlow()
 
     init {
@@ -44,17 +44,30 @@ class GameSetupViewModel(val gameMode: GameMode): ViewModel() {
         }
     }
 
-    fun addPlayer(player: Player) {
-        _players.value += player
+    fun addPlayer() {
+        when (_players.value.size) {
+            1 -> {
+                _players.value += Player(PlayerSlot.PLAYER_2, "Spieler 2")
+            }
+            2 -> {
+                _players.value += Player(PlayerSlot.PLAYER_3, "Spieler 3")
+            }
+            3 -> {
+                _players.value += Player(PlayerSlot.PLAYER_4, "Spieler 4")
+            }
+        }
     }
 
-    fun removePlayer(player: Player) {
-        _players.value -= player
+    fun removePlayer() {
+        if (_players.value.size > 1)
+            _players.value -= _players.value.last()
     }
 
-    fun setNumberOfRounds(value: Int) {
-        if (value in 1..10)
-            _numberOfRounds.value = value
+    fun changePlayerName(playerIndex: Int, newName: String) {
+        val updatedPlayers = _players.value.toMutableList()
+        val oldPlayer = updatedPlayers[playerIndex]
+        updatedPlayers[playerIndex] = oldPlayer.copy(nickname = newName)
+        _players.value = updatedPlayers
     }
 
     fun setCountdown(value: Float) {
