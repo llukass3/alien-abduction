@@ -111,7 +111,7 @@ fun PlayerList(
     onEditingNameChange: (String) -> Unit,
 ) {
     Column(
-        modifier = modifier,
+        modifier = modifier.padding(top = 20.dp),
     ) {
         playerList.forEachIndexed { index, player ->
             PlayerListEntry(

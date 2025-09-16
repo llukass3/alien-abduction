@@ -12,6 +12,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -21,6 +23,8 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.alien_abduction.domain.dataModels.GameConfiguration
 import com.example.alien_abduction.domain.GameMode
+import com.example.alien_abduction.presentation.composables.customComposables.CircularButton
+import com.example.alien_abduction.presentation.sampleData.demoCustomLocation
 import com.example.alien_abduction.presentation.sampleData.demoGameConfigMultiplayerRandomLocation
 import com.example.alien_abduction.presentation.viewModels.GameSetupViewModel
 import com.example.alien_abduction.presentation.sampleData.demoGameConfigRandomLocation
@@ -33,6 +37,9 @@ fun GameSetupScreen(
     viewModel: GameSetupViewModel,
     onGameLaunch: (gameConfiguration: GameConfiguration) -> Unit = {}
 ) {
+
+    val customLocations by viewModel.customLocations.collectAsState()
+
     Box(modifier = modifier
         .fillMaxSize()
         .padding(horizontal = 16.dp)
@@ -52,7 +59,6 @@ fun GameSetupScreen(
             Text(
                 text = stringResource(id = viewModel.gameModeData.descriptionRes),
                 style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.padding(bottom = 20.dp)
             )
 
             val modeConfigurationModifier = Modifier
@@ -61,14 +67,18 @@ fun GameSetupScreen(
                 .padding(bottom = 100.dp, top = 16.dp)
 
             Box(
-                modifier = modeConfigurationModifier
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
             ) {
                 when (viewModel.gameMode) {
                     GameMode.CLASSIC -> ClassicGameSetup(modeConfigurationModifier)
                     GameMode.EXPLORE -> ExploreGameSetup(modeConfigurationModifier)
                     GameMode.MULTIPLAYER -> MultiplayerGameSetup(modeConfigurationModifier, viewModel)
-                    GameMode.CHALLENGE -> ChallengeGameSetup(modeConfigurationModifier)
+                    GameMode.CHALLENGE -> ChallengeGameSetup(modeConfigurationModifier, demoCustomLocation)
                 }
+
+
             }
         }
 
@@ -84,9 +94,17 @@ fun GameSetupScreen(
             ),
             modifier = Modifier
                 .align(Alignment.BottomCenter)
-                .size(width = 150.dp, height = 80.dp)
                 .padding(bottom = 16.dp)
+                .size(width = 150.dp, height = 70.dp)
         )
+
+        if(viewModel.gameMode == GameMode.CHALLENGE)
+            CircularButton(
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
+                    .padding(bottom = 16.dp, end = 10.dp)
+                    .size(70.dp)
+            )
     }
 }
 
@@ -94,7 +112,7 @@ fun GameSetupScreen(
 @Composable
 fun GameSetupPreview() {
     AlienabductionTheme {
-        val mode = GameMode.MULTIPLAYER
+        val mode = GameMode.CHALLENGE
         Scaffold { innerPadding ->
             GameSetupScreen(
                 modifier = Modifier.padding(innerPadding),

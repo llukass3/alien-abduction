@@ -32,8 +32,8 @@ class GameSetupViewModel(val gameMode: GameMode): ViewModel() {
     private val _initialLongitude = MutableStateFlow<Double?>(null)
     val initialLongitude = _initialLongitude.asStateFlow()
 
-    private val _customScenarios = MutableStateFlow(listOf<CustomLocation>())
-    val customScenarios = _customScenarios.asStateFlow()
+    private val _customLocations = MutableStateFlow(listOf<CustomLocation>())
+    val customLocations = _customLocations.asStateFlow()
 
     init {
         when (gameMode) {

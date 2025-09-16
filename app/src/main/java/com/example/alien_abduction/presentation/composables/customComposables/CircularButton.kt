@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,13 +16,14 @@ import androidx.compose.ui.graphics.Color
 fun CircularButton(
     modifier: Modifier = Modifier,
     text: String = "+",
+    color: Color = MaterialTheme.colorScheme.primary,
     onClick: () -> Unit = {}
 ) {
     Box(
         modifier = modifier
             .background(
                 shape = CircleShape,
-                color = Color.White
+                color = color
             )
             .clickable { onClick() }
     ) {

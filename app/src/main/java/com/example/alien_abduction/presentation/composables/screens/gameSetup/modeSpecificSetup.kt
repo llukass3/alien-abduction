@@ -14,17 +14,12 @@ import com.example.alien_abduction.ui.theme.AlienabductionTheme
 
 @Composable
 fun ClassicGameSetup(modifier: Modifier = Modifier) {
-    Text(text = "Classic")
+
 }
 
 @Composable
 fun ExploreGameSetup(modifier: Modifier = Modifier) {
-    Text(text = "Explore")
-}
 
-@Composable
-fun ChallengeGameSetup(modifier: Modifier = Modifier) {
-    Text(text = "Challenge")
 }
 
 @Preview
