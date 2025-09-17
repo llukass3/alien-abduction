@@ -9,5 +9,5 @@ data class PlayerGuess(
     val playerName: String,
     val latitude: Double,
     val longitude: Double,
-    val time: Float?,
+    val timeLeft: Float?,
 )

@@ -9,7 +9,7 @@ val demoPlayerGuess = PlayerGuess(
     playerName = "Lukas",
     latitude = 47.5576,
     longitude = 7.5883,
-    time = 100f,
+    timeLeft = 100f,
 )
 
 val demoPlayerGuessLists = listOf(
@@ -18,28 +18,28 @@ val demoPlayerGuessLists = listOf(
         playerName = "Lukas",
         latitude = 47.5576,
         longitude = 7.5883,
-        time = 100f,
+        timeLeft = 100f,
     ),
     PlayerGuess(
         playerSlot = PlayerSlot.PLAYER_2,
         playerName = "Beyoncé",
         latitude = 46.5576,
         longitude = 8.5883,
-        time = 100f,
+        timeLeft = 100f,
     ),
     PlayerGuess(
         playerSlot = PlayerSlot.PLAYER_3,
         playerName = "Kelly",
         latitude = 45.5576,
         longitude = 9.5883,
-        time = 100f,
+        timeLeft = 100f,
     ),
     PlayerGuess(
         playerSlot = PlayerSlot.PLAYER_4,
         playerName = "Michelle",
         latitude = 43.5576,
         longitude = 10.5883,
-        time = 100f,
+        timeLeft = 100f,
     ),
 )
 

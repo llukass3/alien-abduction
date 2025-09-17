@@ -164,7 +164,6 @@ class MainGameViewModel(
         _currentGuess.value = null //reset current guess
         _currentPlayerIndex.value++ //move to next player index
         _currentPlayer.value = gameConfiguration.players[_currentPlayerIndex.value] //update current player
-
     }
 
     /**saves the current player guess to _playerGuesses list*/
@@ -175,7 +174,7 @@ class MainGameViewModel(
                 playerName = currentPlayer.value.nickname,
                 latitude = currentGuess.value!!.latitude,
                 longitude = currentGuess.value!!.longitude,
-                time = timeLeft.value
+                timeLeft = timeLeft.value
             )
         }
     }

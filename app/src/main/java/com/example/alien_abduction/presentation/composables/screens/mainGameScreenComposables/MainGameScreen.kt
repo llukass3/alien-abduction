@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.LaunchedEffect
@@ -33,6 +34,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.alpha
 import com.example.alien_abduction.domain.PlayerSlot
 import com.example.alien_abduction.domain.dataModels.GameData
@@ -72,7 +74,7 @@ fun MainGameScreen(
         launch {
             snapshotFlow { streetViewCamera.location }
                 .collect {
-
+                    streetViewCamera.location
                 }
         }
     }
@@ -135,12 +137,22 @@ fun MainGameScreen(
                     //save current guess
                     viewModel.saveCurrentGuess()
                     //move to next player, if one exists or end game and expose game data
-                    if(viewModel.hasNextPlayer())
+                    if(viewModel.hasNextPlayer()) {
+                        streetViewCamera.setPosition(initialLocation!!)
                         viewModel.nextPlayer()
+                    }
                     else onGameComplete(viewModel.buildGameData()!!)
                 },
                 openMap = { viewModel.setMapState(true) },
                 closeMap = { viewModel.setMapState(false) }
+            )
+
+            if(viewModel.gameConfiguration.players.size > 1)
+            PlayerPreview(
+                modifier = Modifier
+                    .matchParentSize(),
+                player = currentPlayer,
+                fadeOutDurationMillis = 3000,
             )
         }
         else {
@@ -154,32 +166,26 @@ fun MainGameScreen(
 fun PlayerPreview(
     modifier: Modifier,
     player: Player,
-    fadeOutDurationMillis: Int = 1000, // Adjustable duration, default 1s
-    startFadeOut: Boolean = false      // Control when to start fade out
+    fadeOutDurationMillis: Int = 2000,
 ) {
-    // Animatable for alpha value
     val alpha = remember { Animatable(1f) }
-
-    // Start fade out when startFadeOut is true
-    LaunchedEffect(startFadeOut) {
-        if (startFadeOut) {
-            alpha.animateTo(
-                targetValue = 0f,
-                animationSpec = tween(durationMillis = fadeOutDurationMillis)
-            )
-        } else {
-            alpha.snapTo(1f)
-        }
+    LaunchedEffect(player) {
+        alpha.snapTo(1f)
+        alpha.animateTo(
+            targetValue = 0f,
+            animationSpec = tween(durationMillis = fadeOutDurationMillis)
+        )
     }
 
     Box(
         modifier = modifier
             .fillMaxSize()
+            .alpha(alpha.value)
             .background(player.slot.color)
-            .alpha(alpha.value) // Apply alpha for fade-out
     ) {
         Text(
             text = player.nickname,
+            style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier.align(Alignment.Center),
         )
     }

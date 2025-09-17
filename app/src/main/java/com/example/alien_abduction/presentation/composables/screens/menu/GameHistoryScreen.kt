@@ -3,6 +3,7 @@ package com.example.alien_abduction.presentation.composables.screens.menu
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -21,8 +22,15 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.alien_abduction.domain.dataModels.GameHistoryEntry
+import com.example.alien_abduction.domain.dataModels.MultiplayerGameHistoryEntry
+import com.example.alien_abduction.domain.dataModels.PlayerResult
+import com.example.alien_abduction.domain.util.formatLatLngDMS
+import com.example.alien_abduction.presentation.sampleData.demoGameHistoryEntry
+import com.example.alien_abduction.presentation.sampleData.demoMultiplayerGameHistoryEntry
 import com.example.alien_abduction.ui.theme.AlienabductionTheme
 import com.example.alien_abduction.ui.theme.bodyMediumBold
+import com.google.android.gms.maps.model.LatLng
 
 @Composable
 fun GameHistoryScreen(modifier: Modifier = Modifier) {
@@ -48,17 +56,18 @@ fun GameHistoryScreen(modifier: Modifier = Modifier) {
                 DefaultGameHistoryEntry()
             }
             item {
-                DefaultGameHistoryEntry()
+                GameHistoryEntryCard(
+                    modifier = Modifier,
+                    data = demoGameHistoryEntry
+                )
             }
             item {
-                DefaultGameHistoryEntry()
+                MultiplayerGameHistoryEntryCard(
+                    data = demoMultiplayerGameHistoryEntry,
+                    modifier = Modifier
+                )
             }
-            item {
-                DefaultGameHistoryEntry()
-            }
-            item {
-                DefaultGameHistoryEntry()
-            }
+
         }
     }
 }
@@ -71,8 +80,8 @@ fun DefaultGameHistoryEntry(modifier: Modifier = Modifier) {
         ),
         shape = RoundedCornerShape(20.dp),
         modifier = Modifier
-        .fillMaxWidth()
-        .height(150.dp)
+            .fillMaxWidth()
+            .height(150.dp)
     ) {
         Box(Modifier
             .fillMaxSize()
@@ -123,7 +132,121 @@ fun DefaultGameHistoryEntry(modifier: Modifier = Modifier) {
     }
 }
 
+@Composable
+fun GameHistoryEntryCard(
+    data: GameHistoryEntry,
+    modifier: Modifier
+) {
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+        ),
+        shape = RoundedCornerShape(20.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(150.dp)
+    ) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .padding(vertical = 15.dp, horizontal = 15.dp)
+        ) {
+            Text(
+                text = data.gameMode.displayName,
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.align(Alignment.TopStart),
+            )
+            Text(
+                text = formatLatLngDMS(
+                    LatLng(
+                        data.playerResult.playerGuess.latitude,
+                        data.playerResult.playerGuess.longitude
+                    )
+                ),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier
+                    .align(Alignment.TopStart)
+                    .padding(top = 35.dp),
+            )
+            Row(modifier = Modifier.align(Alignment.BottomStart)) {
+                Column(modifier = Modifier.weight(1f)) {
+                    GameHistoryData(value = "${data.date} ${data.timeOfDay}")
+                    GameHistoryData(key = "Spielzeit", value = data.playerResult.playerGuess.timeLeft.toString())
+                }
+                Column(modifier = Modifier.weight(1f)) {
+                    GameHistoryData(key = "Entfernung", value = data.playerResult.proximity.toString())
+                    GameHistoryData(key = "Punktzahl", value = data.playerResult.points.toString())
+                }
+            }
 
+        }
+    }
+}
+
+@Composable
+fun MultiplayerGameHistoryEntryCard(
+    data: MultiplayerGameHistoryEntry,
+    modifier: Modifier
+) {
+    Card(
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface,
+        ),
+        shape = RoundedCornerShape(20.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(150.dp)
+    ) {
+        Box(
+            Modifier
+                .fillMaxSize()
+                .padding(vertical = 15.dp, horizontal = 15.dp)
+        ) {
+            Text(
+                text = data.gameMode.displayName,
+                style = MaterialTheme.typography.headlineMedium,
+                modifier = Modifier.align(Alignment.TopStart),
+            )
+
+            Column(modifier = Modifier.align(Alignment.BottomStart)) {
+
+            }
+        }
+    }
+}
+
+@Composable
+fun GameHistoryData(
+    key: String? = "",
+    value: String
+) {
+    Row (modifier = Modifier.padding(vertical = 4.dp)) {
+        if (key != null) {
+            if (key.isNotBlank()) {
+                Text(
+                    text = "$key: ",
+                    style = MaterialTheme.typography.bodyMediumBold
+                )
+            }
+        }
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
+}
+
+@Composable
+fun GameHistoryPlayerData(
+    data: PlayerResult
+) {
+    Row (modifier = Modifier.padding(vertical = 4.dp)) {
+        Text(
+            text = data.playerGuess.playerName,
+            style = MaterialTheme.typography.bodyMedium
+        )
+    }
+}
 
 
 @Preview
