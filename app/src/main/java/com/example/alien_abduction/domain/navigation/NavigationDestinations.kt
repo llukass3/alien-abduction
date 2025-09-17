@@ -20,6 +20,9 @@ object GameHistoryScreen
 object AchievementsScreen
 
 @Serializable
+object AddNewLocationScreen
+
+@Serializable
 data class MainGameScreen(val gameConfigJson: String)
 
 @Serializable

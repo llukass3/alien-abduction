@@ -1,5 +1,6 @@
 package com.example.alien_abduction.presentation.composables.screens.gameSetup
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -24,6 +25,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -41,20 +44,34 @@ import com.example.alien_abduction.presentation.viewModels.GameSetupViewModel
 import com.example.alien_abduction.presentation.viewModels.GameSetupViewModelFactory
 import com.example.alien_abduction.ui.theme.AlienabductionTheme
 import com.google.android.gms.maps.model.LatLng
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextAlign
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.CameraPosition
+import com.google.maps.android.compose.AdvancedMarker
+import com.google.maps.android.compose.ComposeMapColorScheme
+import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.MapUiSettings
+import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.compose.rememberUpdatedMarkerState
 
 @Composable
 fun ChallengeGameSetup(
     modifier: Modifier = Modifier,
-    customLocations: List<CustomLocation>
+    viewModel: GameSetupViewModel
 ) {
+    val customLocations by viewModel.customLocations.collectAsState()
+    var mapOpen by remember {mutableStateOf(false)}
+    var selectedLocation by remember { mutableStateOf(LatLng(0.0, 0.0)) }
+
     Box(modifier = modifier) {
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
+
+        if(!mapOpen && customLocations.isNotEmpty()) {
             LazyColumn (
                 modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
             ) {
                 customLocations.forEach() {
                     item {
@@ -65,17 +82,69 @@ fun ChallengeGameSetup(
                                 .padding(5.dp),
                             customLocation = it,
                             onLocationSelected = {
-
+                                viewModel.setInitialLocation(
+                                    LatLng(it.latitude, it.longitude)
+                                )
                             },
                             onViewLocation = {
-
+                                selectedLocation = LatLng(it.latitude, it.longitude)
+                                mapOpen = true
                             },
                             onDeleteLocation = {
-
+                                viewModel.removeCustomLocation(it)
                             }
                         )
                     }
                 }
+            }
+        } else {
+            Text(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .padding(horizontal = 50.dp),
+                textAlign = TextAlign.Center,
+                text = "Du hast noch keine eigenen Standorte erstellt"
+            )
+        }
+
+        if(mapOpen) {
+            val mapsCamera = rememberCameraPositionState {
+                position = CameraPosition.fromLatLngZoom(selectedLocation, 2f)
+            }
+            GoogleMap(
+                modifier = Modifier
+                    .matchParentSize()
+                    .clip(shape = RoundedCornerShape(25.dp))
+                    .border(
+                        width = 3.5.dp,
+                        color = MaterialTheme.colorScheme.secondary,
+                        shape = RoundedCornerShape(25.dp)
+                    ),
+                cameraPositionState = mapsCamera,
+                mapColorScheme = ComposeMapColorScheme.DARK,
+                uiSettings = MapUiSettings(mapToolbarEnabled = false),
+            ) {
+                AdvancedMarker(
+                    state = rememberUpdatedMarkerState(position = selectedLocation),
+                    icon = BitmapDescriptorFactory.fromResource(R.drawable.marker_alien)
+                )
+            }
+            FilledIconButton(
+                onClick = { mapOpen = false },
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(top = 15.dp, end = 15.dp)
+                    .size(60.dp),
+                colors = IconButtonDefaults.iconButtonColors(
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                )
+            ) {
+                Icon(
+                    painter = painterResource(R.drawable.back),
+                    tint = MaterialTheme.colorScheme.primary,
+                    contentDescription = "Ort ansehen",
+                    modifier = Modifier.size(25.dp),
+                )
             }
         }
     }

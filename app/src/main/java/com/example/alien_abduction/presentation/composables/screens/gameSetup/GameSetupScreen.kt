@@ -35,7 +35,8 @@ import com.example.alien_abduction.ui.theme.AlienabductionTheme
 fun GameSetupScreen(
     modifier: Modifier = Modifier,
     viewModel: GameSetupViewModel,
-    onGameLaunch: (gameConfiguration: GameConfiguration) -> Unit = {}
+    onGameLaunch: (gameConfiguration: GameConfiguration) -> Unit = {},
+    onAddNewLocation: () -> Unit = {}
 ) {
 
     val customLocations by viewModel.customLocations.collectAsState()
@@ -61,21 +62,19 @@ fun GameSetupScreen(
                 style = MaterialTheme.typography.bodyLarge,
             )
 
-            val modeConfigurationModifier = Modifier
-                .weight(1f)
-                .fillMaxWidth()
-                .padding(bottom = 100.dp, top = 16.dp)
-
             Box(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
             ) {
+                val modeConfigurationModifier = Modifier
+                    .matchParentSize()
+                    .padding(bottom = 100.dp, top = 16.dp)
                 when (viewModel.gameMode) {
                     GameMode.CLASSIC -> ClassicGameSetup(modeConfigurationModifier)
                     GameMode.EXPLORE -> ExploreGameSetup(modeConfigurationModifier)
                     GameMode.MULTIPLAYER -> MultiplayerGameSetup(modeConfigurationModifier, viewModel)
-                    GameMode.CHALLENGE -> ChallengeGameSetup(modeConfigurationModifier, demoCustomLocation)
+                    GameMode.CHALLENGE -> ChallengeGameSetup(modeConfigurationModifier, viewModel)
                 }
 
 
@@ -100,6 +99,8 @@ fun GameSetupScreen(
 
         if(viewModel.gameMode == GameMode.CHALLENGE)
             CircularButton(
+                onClick = { onAddNewLocation() },
+                fontSize = 30.sp,
                 modifier = Modifier
                     .align(Alignment.BottomEnd)
                     .padding(bottom = 16.dp, end = 10.dp)

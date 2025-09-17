@@ -31,6 +31,7 @@ import com.example.alien_abduction.presentation.viewModels.MainGameViewModel
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.rememberCameraPositionState
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.draw.alpha
 import com.example.alien_abduction.domain.PlayerSlot

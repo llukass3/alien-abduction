@@ -11,13 +11,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.sp
 
 @Composable
 fun CircularButton(
     modifier: Modifier = Modifier,
     text: String = "+",
     color: Color = MaterialTheme.colorScheme.primary,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    style: TextStyle = MaterialTheme.typography.labelLarge,
+    fontSize: TextUnit = 16.sp
+
+
 ) {
     Box(
         modifier = modifier
@@ -31,7 +38,8 @@ fun CircularButton(
             modifier = Modifier.align(Alignment.Center),
             text = text,
             color = Color.Black,
-            style = MaterialTheme.typography.labelLarge,
+            style = style,
+            fontSize = fontSize
         )
     }
 }

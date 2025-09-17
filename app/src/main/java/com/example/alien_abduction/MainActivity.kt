@@ -42,12 +42,16 @@ import com.example.alien_abduction.ui.theme.AlienabductionTheme
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import com.example.alien_abduction.data.StreetViewLocationsRepositoryImpl
+import com.example.alien_abduction.domain.GameMode
 import com.example.alien_abduction.domain.dataModels.GameData
+import com.example.alien_abduction.domain.navigation.AddNewLocationScreen
 import com.example.alien_abduction.domain.navigation.ResultScreen
 import com.example.alien_abduction.domain.useCases.GetStreetViewLocationsUseCase
 import com.example.alien_abduction.domain.useCases.SelectRandomLocationUseCase
 import com.example.alien_abduction.domain.useCases.TimerUseCase
+import com.example.alien_abduction.presentation.composables.screens.gameSetup.AddNewLocationScreen
 import com.example.alien_abduction.presentation.composables.screens.menu.ResultScreen
+import com.example.alien_abduction.presentation.viewModels.AddNewLocationViewModel
 import com.example.alien_abduction.presentation.viewModels.ResultScreenViewModel
 import com.example.alien_abduction.presentation.viewModels.ResultScreenViewModelFactory
 
@@ -125,9 +129,24 @@ class MainActivity : ComponentActivity() {
                                 ),
                                 onGameLaunch = { gameConfiguration ->
                                     val gameConfigJson = Json.encodeToString(gameConfiguration)
-                                    navController.navigate(MainGameScreen(gameConfigJson)) }
+                                    navController.navigate(MainGameScreen(gameConfigJson))
+                                },
+                                onAddNewLocation = {
+                                    navController.navigate(AddNewLocationScreen)
+                                }
                             )
                         }
+
+                        composable<AddNewLocationScreen> {
+                            AddNewLocationScreen(
+                                modifier = Modifier.padding(innerPadding),
+                                viewModel = viewModel<AddNewLocationViewModel>(),
+                                onBackToGameSetup = {
+                                    navController.navigate(GameSetup(GameMode.CHALLENGE))
+                                }
+                            )
+                        }
+
                         composable<MainGameScreen> {
                             val args = it.toRoute<MainGameScreen>()
                             val gameConfiguration = Json.decodeFromString<GameConfiguration>(args.gameConfigJson)

@@ -7,6 +7,7 @@ import com.example.alien_abduction.domain.GameModeData
 import com.example.alien_abduction.domain.PlayerSlot
 import com.example.alien_abduction.domain.dataModels.CustomLocation
 import com.example.alien_abduction.domain.dataModels.Player
+import com.example.alien_abduction.presentation.sampleData.demoCustomLocation
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,8 +33,11 @@ class GameSetupViewModel(val gameMode: GameMode): ViewModel() {
     private val _initialLongitude = MutableStateFlow<Double?>(null)
     val initialLongitude = _initialLongitude.asStateFlow()
 
-    private val _customLocations = MutableStateFlow(listOf<CustomLocation>())
+    private val _customLocations = MutableStateFlow(/*listOf<CustomLocation>()*/ demoCustomLocation)
     val customLocations = _customLocations.asStateFlow()
+
+    private val _customLocationView = MutableStateFlow<LatLng?>(null)
+    val customLocationView = _customLocationView.asStateFlow()
 
     init {
         when (gameMode) {
@@ -76,7 +80,21 @@ class GameSetupViewModel(val gameMode: GameMode): ViewModel() {
     }
 
     fun setInitialLocation(location: LatLng) {
+        _initialLatitude.value = location.latitude
+        _initialLongitude.value = location.longitude
+    }
 
+    fun addCustomLocation(name: String, location: LatLng) {
+        _customLocations.value +=
+            CustomLocation(
+                name = name,
+                latitude = location.latitude,
+                longitude = location.longitude
+            )
+    }
+
+    fun removeCustomLocation(customLocation: CustomLocation) {
+        _customLocations.value -= customLocation
     }
 
     fun buildGameConfiguration(): GameConfiguration {
