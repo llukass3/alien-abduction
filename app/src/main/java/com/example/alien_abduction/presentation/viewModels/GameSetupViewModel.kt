@@ -1,18 +1,24 @@
 package com.example.alien_abduction.presentation.viewModels
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.alien_abduction.domain.dataModels.GameConfiguration
 import com.example.alien_abduction.domain.GameMode
 import com.example.alien_abduction.domain.GameModeData
 import com.example.alien_abduction.domain.PlayerSlot
 import com.example.alien_abduction.domain.dataModels.CustomLocation
 import com.example.alien_abduction.domain.dataModels.Player
+import com.example.alien_abduction.domain.repositories.CustomLocationRepository
 import com.example.alien_abduction.presentation.sampleData.demoCustomLocation
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 
-class GameSetupViewModel(val gameMode: GameMode): ViewModel() {
+class GameSetupViewModel(
+    val gameMode: GameMode,
+    private val customLocationRepo: CustomLocationRepository
+): ViewModel() {
 
     val gameModeData = GameModeData.fromMode(gameMode)
 
@@ -33,7 +39,7 @@ class GameSetupViewModel(val gameMode: GameMode): ViewModel() {
     private val _initialLongitude = MutableStateFlow<Double?>(null)
     val initialLongitude = _initialLongitude.asStateFlow()
 
-    private val _customLocations = MutableStateFlow(/*listOf<CustomLocation>()*/ demoCustomLocation)
+    private val _customLocations = MutableStateFlow(listOf<CustomLocation>())
     val customLocations = _customLocations.asStateFlow()
 
     private val _customLocationView = MutableStateFlow<LatLng?>(null)
@@ -44,7 +50,10 @@ class GameSetupViewModel(val gameMode: GameMode): ViewModel() {
             GameMode.CLASSIC -> {_countdown.value = 180f}
             GameMode.EXPLORE -> {}
             GameMode.MULTIPLAYER -> {_countdown.value = 180f}
-            GameMode.CHALLENGE -> {}
+            GameMode.CHALLENGE -> {
+                _countdown.value = 180f
+                loadCustomLocations()
+            }
         }
     }
 
@@ -93,9 +102,19 @@ class GameSetupViewModel(val gameMode: GameMode): ViewModel() {
             )
     }
 
-    fun removeCustomLocation(customLocation: CustomLocation) {
-        _customLocations.value -= customLocation
+    private fun loadCustomLocations() {
+        viewModelScope.launch {
+            _customLocations.value = customLocationRepo.getAllLocations()
+        }
     }
+
+    fun removeCustomLocation(customLocation: CustomLocation) {
+        viewModelScope.launch {
+            customLocationRepo.removeLocation(customLocation)
+            loadCustomLocations() // reload after delete
+        }
+    }
+
 
     fun buildGameConfiguration(): GameConfiguration {
         return GameConfiguration(

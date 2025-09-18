@@ -24,6 +24,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import androidx.room.Room
 import com.example.alien_abduction.data.AppDatabase
+import com.example.alien_abduction.data.repositoryImplementations.CustomLocationRepositoryImpl
 import com.example.alien_abduction.data.repositoryImplementations.GameHistoryRepositoryImpl
 import com.example.alien_abduction.domain.dataModels.GameConfiguration
 import com.example.alien_abduction.domain.navigation.AchievementsScreen
@@ -61,6 +62,7 @@ import com.example.alien_abduction.presentation.composables.screens.menu.AppInfo
 import com.example.alien_abduction.presentation.composables.screens.menu.AppInfo.AppInfoScreen
 import com.example.alien_abduction.presentation.composables.screens.menu.ResultScreen
 import com.example.alien_abduction.presentation.viewModels.AddNewLocationViewModel
+import com.example.alien_abduction.presentation.viewModels.AddNewLocationViewModelFactory
 import com.example.alien_abduction.presentation.viewModels.GameHistoryViewModel
 import com.example.alien_abduction.presentation.viewModels.GameHistoryViewModelFactory
 import com.example.alien_abduction.presentation.viewModels.ResultScreenViewModel
@@ -90,12 +92,18 @@ class MainActivity : ComponentActivity() {
                 val currentScreen = navBackStackEntry?.destination?.route //saves current screen
 
                 //database related variables
-                val database = Room.databaseBuilder(LocalContext.current, AppDatabase::class.java, "alien_abduction_db").build()
+                val database = Room.databaseBuilder(
+                    LocalContext.current,
+                    AppDatabase::class.java,
+                    "alien_abduction_db")
+                    .fallbackToDestructiveMigration(false).build()
                 val gameHistoryDao = database.gameHistoryDao()
+                val customLocationDao = database.customLocationDao()
 
                 //repositories
                 val gameHistoryRepo = GameHistoryRepositoryImpl(gameHistoryDao) //accesses game history data
                 val locationsRepo = StreetViewLocationsRepositoryImpl(LocalContext.current) //all locations in the game
+                val customLocationRepo = CustomLocationRepositoryImpl(customLocationDao) //custom locations
 
                 Scaffold(
                     bottomBar = {
@@ -166,7 +174,10 @@ class MainActivity : ComponentActivity() {
                             GameSetupScreen(
                                 modifier = Modifier.padding(innerPadding),
                                 viewModel = viewModel<GameSetupViewModel>(
-                                    factory = GameSetupViewModelFactory(args.gameMode)
+                                    factory = GameSetupViewModelFactory(
+                                        gameMode = args.gameMode,
+                                        customLocationRepo = customLocationRepo
+                                    )
                                 ),
                                 onGameLaunch = { gameConfiguration ->
                                     val gameConfigJson = Json.encodeToString(gameConfiguration)
@@ -182,7 +193,9 @@ class MainActivity : ComponentActivity() {
                         composable<AddNewLocationScreen> {
                             AddNewLocationScreen(
                                 modifier = Modifier.padding(innerPadding),
-                                viewModel = viewModel<AddNewLocationViewModel>(),
+                                viewModel = viewModel<AddNewLocationViewModel>(
+                                    factory = AddNewLocationViewModelFactory(customLocationRepo)
+                                ),
                                 onBackToGameSetup = {
                                     navController.navigate(GameSetup(GameMode.CHALLENGE))
                                 }

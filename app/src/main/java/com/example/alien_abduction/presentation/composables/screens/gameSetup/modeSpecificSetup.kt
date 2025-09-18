@@ -22,6 +22,7 @@ fun ExploreGameSetup(modifier: Modifier = Modifier) {
 
 }
 
+/*
 @Preview
 @Composable
 fun ModeSpecificGameSetupPreview() {
@@ -37,3 +38,4 @@ fun ModeSpecificGameSetupPreview() {
         }
     }
 }
+*/

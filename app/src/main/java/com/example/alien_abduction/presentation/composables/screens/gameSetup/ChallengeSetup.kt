@@ -1,5 +1,6 @@
 package com.example.alien_abduction.presentation.composables.screens.gameSetup
 
+import android.widget.Toast
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -48,6 +49,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -67,6 +69,8 @@ fun ChallengeGameSetup(
     var mapOpen by remember {mutableStateOf(false)}
     var selectedLocation by remember { mutableStateOf(LatLng(0.0, 0.0)) }
 
+    val context = LocalContext.current
+
     Box(modifier = modifier) {
 
         if(!mapOpen && customLocations.isNotEmpty()) {
@@ -85,6 +89,11 @@ fun ChallengeGameSetup(
                                 viewModel.setInitialLocation(
                                     LatLng(it.latitude, it.longitude)
                                 )
+                                Toast.makeText(
+                                    context,
+                                    "Szenario ausgewählt",
+                                    Toast.LENGTH_SHORT
+                                ).show()
                             },
                             onViewLocation = {
                                 selectedLocation = LatLng(it.latitude, it.longitude)
@@ -148,8 +157,6 @@ fun ChallengeGameSetup(
             }
         }
     }
-
-
 }
 
 @Composable
@@ -239,13 +246,13 @@ fun CustomLocationCard(
 fun ChallengeSetupPreview() {
     AlienabductionTheme {
         val mode = GameMode.CHALLENGE
-        Scaffold { innerPadding ->
-            GameSetupScreen(
-                modifier = Modifier.padding(innerPadding),
-                viewModel = viewModel<GameSetupViewModel>(
-                    factory = GameSetupViewModelFactory(mode)
-                )
-            )
-        }
-    }
+/*  Scaffold { innerPadding ->
+      GametupScreen(
+          modifier = Modifier.padding(innerPadding),
+          viewModel = viewModel<GameSetupViewModel>(
+              factory = GameSetupViewModelFactory(mode)
+          )
+      )
+  }*/
+}
 }

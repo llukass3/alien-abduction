@@ -114,14 +114,14 @@ fun GameSetupScreen(
 fun GameSetupPreview() {
     AlienabductionTheme {
         val mode = GameMode.CHALLENGE
-        Scaffold { innerPadding ->
+        /*Scaffold { innerPadding ->
             GameSetupScreen(
                 modifier = Modifier.padding(innerPadding),
                 viewModel = viewModel<GameSetupViewModel>(
                     factory = GameSetupViewModelFactory(mode)
                 )
             )
-        }
+        }*/
     }
 }
 

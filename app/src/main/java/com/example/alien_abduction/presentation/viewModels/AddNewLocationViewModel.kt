@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.alien_abduction.BuildConfig
 import com.example.alien_abduction.domain.dataModels.CustomLocation
+import com.example.alien_abduction.domain.repositories.CustomLocationRepository
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.Status
 import com.google.maps.android.StreetViewUtils.Companion.fetchStreetViewData
@@ -12,7 +13,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 
-class AddNewLocationViewModel: ViewModel() {
+class AddNewLocationViewModel(
+    private val customLocationRepo: CustomLocationRepository
+): ViewModel() {
 
     private val _currentLocationName = MutableStateFlow("Mein Szenario")
     val currentLocationName = _currentLocationName.asStateFlow()
@@ -42,14 +45,16 @@ class AddNewLocationViewModel: ViewModel() {
 
 
     fun saveCurrentCustomLocation() {
-        if(currentLocationSelection.value != null) {
-            val candidate = _currentLocationSelection.value!!
-            val newCustomLocation =
-                CustomLocation(
-                    name = currentLocationName.value,
-                    latitude = candidate.latitude,
-                    longitude = candidate.longitude
-                )
+        val candidate = _currentLocationSelection.value
+        if(candidate != null) {
+            val newCustomLocation = CustomLocation(
+                name = currentLocationName.value,
+                latitude = candidate.latitude,
+                longitude = candidate.longitude
+            )
+            viewModelScope.launch {
+                customLocationRepo.addLocation(newCustomLocation)
+            }
         }
     }
 }

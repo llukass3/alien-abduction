@@ -7,9 +7,10 @@ import com.example.alien_abduction.data.converters.*
 
 @Database(
     entities = [
-        GameHistoryEntryEntity::class
+        GameHistoryEntryEntity::class,
+        CustomLocationEntity::class
                ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 @TypeConverters(
@@ -21,4 +22,5 @@ import com.example.alien_abduction.data.converters.*
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun gameHistoryDao(): GameHistoryDao
+    abstract fun customLocationDao(): CustomLocationDao
 }

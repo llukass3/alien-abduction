@@ -209,13 +209,14 @@ fun PlayerListEntry(
     }
 }
 
+/*
 @Preview
 @Composable
 fun MultiplayerSetupPreview() {
     AlienabductionTheme {
         val mode = GameMode.MULTIPLAYER
         Scaffold { innerPadding ->
-            GameSetupScreen(
+            /*GameSetupScreen(
                 modifier = Modifier.padding(innerPadding),
                 viewModel = viewModel<GameSetupViewModel>(
                     factory = GameSetupViewModelFactory(mode)
@@ -224,3 +225,4 @@ fun MultiplayerSetupPreview() {
         }
     }
 }
+*/
