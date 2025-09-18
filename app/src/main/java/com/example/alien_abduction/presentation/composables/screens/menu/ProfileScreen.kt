@@ -104,7 +104,7 @@ fun UserProfile() {
             .clickable {  }
     ){
         Text(
-            text = "Specimen #1261",
+            text = "Exemplar #1261",
             style = MaterialTheme.typography.titleLarge
         )
         Icon(

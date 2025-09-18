@@ -3,23 +3,26 @@ package com.example.alien_abduction.presentation.viewModels
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
-import com.example.alien_abduction.domain.GameMode
-import com.example.alien_abduction.domain.dataModels.DefaultGameHistoryEntry
+import androidx.lifecycle.viewModelScope
 import com.example.alien_abduction.domain.dataModels.GameData
 import com.example.alien_abduction.domain.dataModels.GameHistoryEntry
-import com.example.alien_abduction.domain.dataModels.MultiplayerGameHistoryEntry
 import com.google.android.gms.maps.model.LatLng
 import com.example.alien_abduction.domain.dataModels.PlayerGuess
 import com.example.alien_abduction.domain.dataModels.PlayerResult
+import com.example.alien_abduction.domain.repositories.GameHistoryRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import com.google.maps.android.SphericalUtil
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
-class ResultScreenViewModel(val gameData: GameData) : ViewModel() {
+class ResultScreenViewModel(
+    val gameData: GameData,
+    val gameHistoryRepo: GameHistoryRepository
+) : ViewModel() {
 
     val alienLocation = LatLng(gameData.locationLatitude, gameData.locationLongitude)
 
@@ -35,7 +38,7 @@ class ResultScreenViewModel(val gameData: GameData) : ViewModel() {
         }
         _playerResults.value = playerResultsUnsorted.sortedByDescending { it.points }
 
-        val gameHistoryEntry = buildGameHistoryEntry()
+        buildGameHistoryEntryAndSave()
     }
 
     private fun measureDistance(
@@ -69,23 +72,19 @@ class ResultScreenViewModel(val gameData: GameData) : ViewModel() {
             points = score
         )
     }
-    
+
     @RequiresApi(Build.VERSION_CODES.O)
-    fun buildGameHistoryEntry(): GameHistoryEntry {
-        return if (gameData.gameMode == GameMode.MULTIPLAYER)
-            MultiplayerGameHistoryEntry(
-                gameMode = gameData.gameMode,
-                date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
-                timeOfDay = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")),
-                playerResults = playerResults.value
-            )
-        else return DefaultGameHistoryEntry(
+    fun buildGameHistoryEntryAndSave() {
+        val entry = GameHistoryEntry(
             gameMode = gameData.gameMode,
             date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
             timeOfDay = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")),
-            playerResult = playerResults.value.first()
+            playerResults = playerResults.value
         )
-        
+        // Save entry to database asynchronously
+        viewModelScope.launch {
+            gameHistoryRepo.saveGameHistory(entry)
+        }
     }
 
 }

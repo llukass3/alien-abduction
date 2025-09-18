@@ -51,6 +51,7 @@ import com.google.maps.android.compose.Polyline
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.rememberUpdatedMarkerState
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ResultScreen(
     modifier: Modifier = Modifier,
@@ -207,13 +208,13 @@ fun PlayerResult(
 @Composable
 fun ResultScreenPreview() {
     AlienabductionTheme {
-        Scaffold { innerPadding ->
+        /*Scaffold { innerPadding ->
             ResultScreen(
                 viewModel = ResultScreenViewModel(
-                    gameData = demoGameData
+                    gameData = demoGameData,
                 ),
                 modifier = Modifier.padding(innerPadding)
             )
-        }
+        }*/
     }
 }

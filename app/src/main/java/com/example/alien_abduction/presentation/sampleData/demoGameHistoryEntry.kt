@@ -3,8 +3,7 @@ package com.example.alien_abduction.presentation.sampleData
 import android.os.Build
 import androidx.annotation.RequiresApi
 import com.example.alien_abduction.domain.GameMode
-import com.example.alien_abduction.domain.dataModels.DefaultGameHistoryEntry
-import com.example.alien_abduction.domain.dataModels.MultiplayerGameHistoryEntry
+import com.example.alien_abduction.domain.dataModels.GameHistoryEntry
 import com.example.alien_abduction.domain.dataModels.PlayerResult
 import java.time.LocalDate
 import java.time.LocalTime
@@ -12,19 +11,21 @@ import java.time.format.DateTimeFormatter
 
 
 @RequiresApi(Build.VERSION_CODES.O)
-val demoDefaultGameHistoryEntry = DefaultGameHistoryEntry(
+val demoDefaultGameHistoryEntry = GameHistoryEntry(
     gameMode = GameMode.CLASSIC,
     date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
     timeOfDay = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")),
-    playerResult = PlayerResult(
-        playerGuess = demoPlayerGuess,
-        proximity = 1000.0,
-        points = 1250
+    playerResults =  listOf(
+        PlayerResult(
+            playerGuess = demoPlayerGuess,
+            proximity = 1000.0,
+            points = 1250
+        )
     ),
 )
 
 @RequiresApi(Build.VERSION_CODES.O)
-val demoMultiplayerGameHistoryEntry = MultiplayerGameHistoryEntry(
+val demoMultiplayerGameHistoryEntry = GameHistoryEntry(
     gameMode = GameMode.MULTIPLAYER,
     date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
     timeOfDay = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")),

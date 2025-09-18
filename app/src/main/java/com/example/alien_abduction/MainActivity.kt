@@ -22,6 +22,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import androidx.room.Room
+import com.example.alien_abduction.data.AppDatabase
+import com.example.alien_abduction.data.repositoryImplementations.GameHistoryRepositoryImpl
 import com.example.alien_abduction.domain.dataModels.GameConfiguration
 import com.example.alien_abduction.domain.navigation.AchievementsScreen
 import com.example.alien_abduction.domain.navigation.GameHistoryScreen
@@ -43,7 +46,7 @@ import com.example.alien_abduction.presentation.composables.screens.menu.Profile
 import com.example.alien_abduction.ui.theme.AlienabductionTheme
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import com.example.alien_abduction.data.StreetViewLocationsRepositoryImpl
+import com.example.alien_abduction.data.repositoryImplementations.StreetViewLocationsRepositoryImpl
 import com.example.alien_abduction.domain.GameMode
 import com.example.alien_abduction.domain.dataModels.GameData
 import com.example.alien_abduction.domain.navigation.AddNewLocationScreen
@@ -58,11 +61,17 @@ import com.example.alien_abduction.presentation.composables.screens.menu.AppInfo
 import com.example.alien_abduction.presentation.composables.screens.menu.AppInfo.AppInfoScreen
 import com.example.alien_abduction.presentation.composables.screens.menu.ResultScreen
 import com.example.alien_abduction.presentation.viewModels.AddNewLocationViewModel
+import com.example.alien_abduction.presentation.viewModels.GameHistoryViewModel
+import com.example.alien_abduction.presentation.viewModels.GameHistoryViewModelFactory
 import com.example.alien_abduction.presentation.viewModels.ResultScreenViewModel
 import com.example.alien_abduction.presentation.viewModels.ResultScreenViewModelFactory
 
-
 class MainActivity : ComponentActivity() {
+
+    //Room-Database for persistent saving of game history
+    lateinit var database: AppDatabase
+        private set
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -72,11 +81,21 @@ class MainActivity : ComponentActivity() {
             statusBarStyle = SystemBarStyle.dark(scrim = Color.TRANSPARENT),
             navigationBarStyle = SystemBarStyle.dark(scrim = Color.TRANSPARENT)
         )
+
         setContent {
             AlienabductionTheme {
+                //navigation related variables
                 val navController = rememberNavController()
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentScreen = navBackStackEntry?.destination?.route //saves current screen
+
+                //database related variables
+                val database = Room.databaseBuilder(LocalContext.current, AppDatabase::class.java, "alien_abduction_db").build()
+                val gameHistoryDao = database.gameHistoryDao()
+
+                //repositories
+                val gameHistoryRepo = GameHistoryRepositoryImpl(gameHistoryDao) //accesses game history data
+                val locationsRepo = StreetViewLocationsRepositoryImpl(LocalContext.current) //all locations in the game
 
                 Scaffold(
                     bottomBar = {
@@ -96,12 +115,15 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                 ) { innerPadding ->
+                    //NavHost for navigation between screens
                     NavHost(
                         navController = navController,
                         startDestination = HomeScreen
                     ) {
 
-                        /* menu-related screens */
+                        /*The Home Screen is the first Screen the player lands on
+                        * The Player Can choose a game Mode here.*/
+
                         composable<HomeScreen> {
                             HomeScreen(
                                 modifier = Modifier.padding(innerPadding),
@@ -109,6 +131,9 @@ class MainActivity : ComponentActivity() {
                                 onViewInfo = {navController.navigate(AppInfoMenu)}
                             )
                         }
+
+                        /*The Home Screen features statistics and navigates to the game history screen
+                        * and the achievements screen*/
                         composable<ProfileScreen> {
                             ProfileScreen(
                                 modifier = Modifier.padding(innerPadding),
@@ -116,18 +141,26 @@ class MainActivity : ComponentActivity() {
                                 navToAchievements = { navController.navigate(AchievementsScreen) }
                             )
                         }
+
+                        /*The Game History Screen features a List previously completed Games*/
                         composable<GameHistoryScreen> {
                             GameHistoryScreen(
-                                modifier = Modifier.padding(innerPadding)
+                                modifier = Modifier.padding(innerPadding),
+                                viewModel = viewModel<GameHistoryViewModel>(
+                                    factory = GameHistoryViewModelFactory(gameHistoryRepo)
+                                )
                             )
                         }
+
+                        /*The Achievement screen features a List of achievements the player can unlock*/
                         composable<AchievementsScreen> {
                             AchievementsScreen(
                                 modifier = Modifier.padding(innerPadding)
                             )
                         }
 
-                        /* game-related screens */
+                        /*The Game Setup features a short description for each gamemode and lets
+                        players customize their games. Different for each game Mode*/
                         composable<GameSetup> {
                             val args = it.toRoute<GameSetup>()
                             GameSetupScreen(
@@ -145,6 +178,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
+                        /*In this screen the player can add a new custom location to the game.*/
                         composable<AddNewLocationScreen> {
                             AddNewLocationScreen(
                                 modifier = Modifier.padding(innerPadding),
@@ -155,12 +189,13 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
+                        /*The main in-game screen where the player navigates the street view and guesses
+                        * a location on the map*/
                         composable<MainGameScreen> {
                             val args = it.toRoute<MainGameScreen>()
                             val gameConfiguration = Json.decodeFromString<GameConfiguration>(args.gameConfigJson)
 
-                            val repository = StreetViewLocationsRepositoryImpl(LocalContext.current)
-                            val getStreetViewLocationsUseCase = GetStreetViewLocationsUseCase(repository)
+                            val getStreetViewLocationsUseCase = GetStreetViewLocationsUseCase(locationsRepo)
                             val selectRandomLocationUseCase = SelectRandomLocationUseCase()
                             val timerUseCase = TimerUseCase()
 
@@ -181,6 +216,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
+                        /*The Result Screen shows the player the results of the game.*/
                         composable<ResultScreen> {
                             val args = it.toRoute<ResultScreen>()
                             val gameData = Json.decodeFromString<GameData>(args.gameDataJson)
@@ -190,7 +226,8 @@ class MainActivity : ComponentActivity() {
                                 onReturnToMenu = { navController.navigate(HomeScreen) },
                                 viewModel = viewModel<ResultScreenViewModel>(
                                     factory = ResultScreenViewModelFactory(
-                                        gameData = gameData
+                                        gameData = gameData,
+                                        gameHistoryRepo = gameHistoryRepo
                                     )
                                 )
                             )
