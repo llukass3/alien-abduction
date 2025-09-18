@@ -8,38 +8,10 @@ import androidx.compose.ui.Modifier
 fun UXDescription(modifier: Modifier = Modifier) {
     LazyColumn(modifier = Modifier) {
         item {
-            HeadLine("Hello Überschrift")
-            BodyText(
-                "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod " +
-                        "tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At " +
-                        "vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, " +
-                        "no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, " +
-                        "consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et" +
-                        " dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo " +
-                        "dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem " +
-                        "ipsum dolor sit amet."
-            )
-            BodyText(
-                "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod " +
-                        "tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At " +
-                        "vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, " +
-                        "no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, " +
-                        "consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et" +
-                        " dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo " +
-                        "dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem " +
-                        "ipsum dolor sit amet."
-            )
-            HeadLine("Hello Überschrift")
-            BodyText(
-                "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod " +
-                        "tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At " +
-                        "vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, " +
-                        "no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, " +
-                        "consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et" +
-                        " dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo " +
-                        "dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem " +
-                        "ipsum dolor sit amet."
-            )
+            HeadLine("Benutzung und UX")
+            BodyText("Um wichtigen UX Prinzipien zu folgen habe ich darauf geachtet, in der App ein einheitliches Theming zu verwenden. Hierzu habe ich die von Android Studio bereitgesptellten Theming-Funktionen genutzt und beispielsweise ein eigenes Farbschema und eigene Typografie durch Einbindung von Google Fonts implementiert. Der User erhält für jeden Klick ein Feedback. Durch sogenannte „Toasts“ (kurze Texteinblendungen) wird mitgeteilt, dass bestimmte Aktionen erfolgt sind (z.B. „Standort Ausgewählt) oder es werden Anweisungen gegeben (z.B. „Bitte wähle einen Standort aus“), wenn der Spieler das Spiel beenden möchte, ohne dass ein Standort ausgewählt wurde. ")
+            BodyText("Nicht nur textliches, sondern auch Visuelles Feedback informiert den User über die Geschehnisse in der App. Als Beispiel der „Guess“ Knopf in der Spiel-Ansicht: Ist kein Standort ausgewählt, ist er Grün-Schwarz gefärbt. Ist ein Standort ausgewählt, färbt er sich Weiß-Grün, was dem User signalisiert, dass beim nächsten Klick eine andere Aktion erfolgen wird (in diesem Fall wird das Spiel beendet).")
+            BodyText("Die Type-Safe-Navigation Bibliothek von Android ermöglicht ein nahtloses wechseln zwischen den Bildschirmen mit animierten Übergängen und stellt einen zwischengespeicherten Back Stack bereit, der zuvor besuchte Screens speichert und durch das betätigen des „zurück“ Buttons von Android wieder aufruft.")
         }
     }
 }
