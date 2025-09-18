@@ -1,13 +1,12 @@
 package com.example.alien_abduction.presentation.sampleData
 
 import com.example.alien_abduction.domain.GameMode
-import com.example.alien_abduction.domain.dataModels.GameHistoryEntry
+import com.example.alien_abduction.domain.dataModels.DefaultGameHistoryEntry
 import com.example.alien_abduction.domain.dataModels.MultiplayerGameHistoryEntry
-import com.example.alien_abduction.domain.dataModels.PlayerGuess
 import com.example.alien_abduction.domain.dataModels.PlayerResult
 
 
-val demoGameHistoryEntry = GameHistoryEntry(
+val demoDefaultGameHistoryEntry = DefaultGameHistoryEntry(
     gameMode = GameMode.CLASSIC,
     date = "17.09.2025",
     timeOfDay = "23:12",

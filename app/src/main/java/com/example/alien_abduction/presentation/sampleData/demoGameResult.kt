@@ -1,5 +1,6 @@
 package com.example.alien_abduction.presentation.sampleData
 
+import com.example.alien_abduction.domain.GameMode
 import com.example.alien_abduction.domain.PlayerSlot
 import com.example.alien_abduction.domain.dataModels.GameData
 import com.example.alien_abduction.domain.dataModels.PlayerGuess
@@ -44,6 +45,7 @@ val demoPlayerGuessLists = listOf(
 )
 
 val demoGameData = GameData(
+    gameMode = GameMode.CLASSIC,
     locationLatitude = 20.5576,
     locationLongitude = 4.5883,
     playerGuesses = listOf(demoPlayerGuess)

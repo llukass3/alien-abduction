@@ -22,11 +22,11 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.alien_abduction.domain.dataModels.GameHistoryEntry
+import com.example.alien_abduction.domain.dataModels.DefaultGameHistoryEntry
 import com.example.alien_abduction.domain.dataModels.MultiplayerGameHistoryEntry
 import com.example.alien_abduction.domain.dataModels.PlayerResult
 import com.example.alien_abduction.domain.util.formatLatLngDMS
-import com.example.alien_abduction.presentation.sampleData.demoGameHistoryEntry
+import com.example.alien_abduction.presentation.sampleData.demoDefaultGameHistoryEntry
 import com.example.alien_abduction.presentation.sampleData.demoMultiplayerGameHistoryEntry
 import com.example.alien_abduction.ui.theme.AlienabductionTheme
 import com.example.alien_abduction.ui.theme.bodyMediumBold
@@ -58,7 +58,7 @@ fun GameHistoryScreen(modifier: Modifier = Modifier) {
             item {
                 GameHistoryEntryCard(
                     modifier = Modifier,
-                    data = demoGameHistoryEntry
+                    data = demoDefaultGameHistoryEntry
                 )
             }
             item {
@@ -134,7 +134,7 @@ fun DefaultGameHistoryEntry(modifier: Modifier = Modifier) {
 
 @Composable
 fun GameHistoryEntryCard(
-    data: GameHistoryEntry,
+    data: DefaultGameHistoryEntry,
     modifier: Modifier
 ) {
     Card(

@@ -16,6 +16,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import com.example.alien_abduction.R
 import com.example.alien_abduction.domain.PlayerSlot
 import com.example.alien_abduction.domain.dataModels.PlayerGuess
+import com.example.alien_abduction.domain.dataModels.PlayerResult
 import com.example.alien_abduction.domain.util.getPlayerMarker
 import com.example.alien_abduction.presentation.composables.customComposables.MainGameButton
 import com.example.alien_abduction.presentation.sampleData.demoGameData
@@ -54,6 +57,8 @@ fun ResultScreen(
     val mapsCamera = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(viewModel.alienLocation, 0f)
     }
+
+    val playerResults by viewModel.playerResults.collectAsState()
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -101,11 +106,12 @@ fun ResultScreen(
         }
 
         PlayerResultsList(
-            playerGuesses = viewModel.gameData.playerGuesses,
+            playerResults = playerResults,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 20.dp)
         )
+
 
         MainGameButton(
             name = "Zurück zum Hauptmenü",
@@ -118,7 +124,7 @@ fun ResultScreen(
 @Composable
 fun PlayerResultsList(
     modifier: Modifier = Modifier,
-    playerGuesses: List<PlayerGuess>
+    playerResults: List<PlayerResult>
 ) {
     Column(
         modifier = modifier
@@ -141,9 +147,9 @@ fun PlayerResultsList(
                 Text(text = "Punkte", style = MaterialTheme.typography.bodyMedium)
             }
         }
-        playerGuesses.forEach {
+        playerResults.forEach {
             PlayerResult(
-                playerGuess = it,
+                playerResult = it,
                 modifier = Modifier.padding(vertical = 5.dp)
             )
         }
@@ -154,7 +160,7 @@ fun PlayerResultsList(
 @Composable
 fun PlayerResult(
     modifier: Modifier = Modifier,
-    playerGuess: PlayerGuess
+    playerResult: PlayerResult
 ) {
     Row(
         modifier = modifier
@@ -169,25 +175,24 @@ fun PlayerResult(
                     .size(9.dp)
                     .background(
                         shape = CircleShape,
-                        color = playerGuess.playerSlot.color
+                        color = playerResult.playerGuess.playerSlot.color
                     )
             )
             Text(
-                text = playerGuess.playerName,
+                text = playerResult.playerGuess.playerName,
                 style = MaterialTheme.typography.titleMedium
             )
         }
 
         Text(
             modifier = Modifier.weight(1f),
-            text = "10.000 km",
+            text = playerResult.proximity.toString(),
             fontSize = 20.sp
         )
 
         Text(
             modifier = Modifier.weight(0.5f),
-            //text = playerGuess.points.toString(),
-            text = "5000",
+            text = playerResult.points.toString(),
             textAlign = TextAlign.End,
             fontSize = 20.sp
         )

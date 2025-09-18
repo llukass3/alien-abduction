@@ -185,6 +185,7 @@ class MainGameViewModel(
 
         if(initialLocation != null && guessedLocation != null) {
             return GameData(
+                gameMode = gameConfiguration.mode,
                 locationLatitude = initialLocation.latitude,
                 locationLongitude = initialLocation.longitude,
                 playerGuesses = _playerGuesses.value
