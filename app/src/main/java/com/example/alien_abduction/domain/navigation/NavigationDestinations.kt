@@ -4,6 +4,7 @@ import com.example.alien_abduction.domain.GameMode
 import com.example.alien_abduction.domain.dataModels.PlayerGuess
 import kotlinx.serialization.Serializable
 
+//This File contaisn all Screens that the Navigation Controller can navigate to
 @Serializable
 object HomeScreen
 

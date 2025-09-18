@@ -4,6 +4,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
+//this use case contains all timer logic for the game
 class TimerUseCase {
 
     private var timerJob: Job? = null

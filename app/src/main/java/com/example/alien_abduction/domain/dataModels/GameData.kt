@@ -3,6 +3,7 @@ package com.example.alien_abduction.domain.dataModels
 import com.example.alien_abduction.domain.GameMode
 import kotlinx.serialization.Serializable
 
+//Diese Datenklasse repräsentiert die rohen, unverarbeiteten Daten am Ende eines Spiels
 @Serializable
 data class GameData(
     val gameMode: GameMode,
