@@ -27,3 +27,10 @@ data class MainGameScreen(val gameConfigJson: String)
 
 @Serializable
 data class ResultScreen(val gameDataJson: String)
+
+
+@Serializable
+object AppInfoMenu
+
+@Serializable
+data class AppInfoDetail(val screenId: Int)

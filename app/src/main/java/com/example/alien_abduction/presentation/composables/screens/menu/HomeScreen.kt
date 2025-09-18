@@ -3,12 +3,15 @@ package com.example.alien_abduction.presentation.composables.screens.menu
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -27,23 +30,38 @@ import com.example.alien_abduction.ui.theme.AlienabductionTheme
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    onModeChosen: (GameMode) -> Unit = {}
+    onModeChosen: (GameMode) -> Unit = {},
+    onViewInfo: () -> Unit = {}
 ) {
-    Column(
-        verticalArrangement = Arrangement.Top,
-        modifier = modifier
-            .fillMaxSize()
-    ) {
-        Image(
-            painterResource(R.drawable.splash_art),
-            "Alien Abduction Splash Art",
+    Box(modifier = modifier.fillMaxSize()) {
+        Column(
+            verticalArrangement = Arrangement.Top,
             modifier = Modifier
-                .padding(top = 25.dp)
-        )
-        GameModeList(onModeChosen = { onModeChosen(it) })
+                .matchParentSize()
+        ) {
+            Image(
+                painterResource(R.drawable.splash_art),
+                "Alien Abduction Splash Art",
+                modifier = Modifier
+                    .padding(top = 25.dp)
+            )
+            GameModeList(onModeChosen = { onModeChosen(it) })
+        }
+        IconButton(
+            onClick = { onViewInfo() },
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(top = 5.dp, end = 5.dp)
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.settings),
+                tint = MaterialTheme.colorScheme.primary,
+                contentDescription = "Info"
+            )
+        }
     }
-
 }
+
 
 @Composable
 fun GameModeList(

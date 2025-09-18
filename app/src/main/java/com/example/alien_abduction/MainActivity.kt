@@ -1,11 +1,13 @@
 package com.example.alien_abduction
 
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -45,11 +47,15 @@ import com.example.alien_abduction.data.StreetViewLocationsRepositoryImpl
 import com.example.alien_abduction.domain.GameMode
 import com.example.alien_abduction.domain.dataModels.GameData
 import com.example.alien_abduction.domain.navigation.AddNewLocationScreen
+import com.example.alien_abduction.domain.navigation.AppInfoDetail
+import com.example.alien_abduction.domain.navigation.AppInfoMenu
 import com.example.alien_abduction.domain.navigation.ResultScreen
 import com.example.alien_abduction.domain.useCases.GetStreetViewLocationsUseCase
 import com.example.alien_abduction.domain.useCases.SelectRandomLocationUseCase
 import com.example.alien_abduction.domain.useCases.TimerUseCase
 import com.example.alien_abduction.presentation.composables.screens.gameSetup.AddNewLocationScreen
+import com.example.alien_abduction.presentation.composables.screens.menu.AppInfo.AppInfoDetailedView
+import com.example.alien_abduction.presentation.composables.screens.menu.AppInfo.AppInfoScreen
 import com.example.alien_abduction.presentation.composables.screens.menu.ResultScreen
 import com.example.alien_abduction.presentation.viewModels.AddNewLocationViewModel
 import com.example.alien_abduction.presentation.viewModels.ResultScreenViewModel
@@ -57,6 +63,7 @@ import com.example.alien_abduction.presentation.viewModels.ResultScreenViewModel
 
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -99,6 +106,7 @@ class MainActivity : ComponentActivity() {
                             HomeScreen(
                                 modifier = Modifier.padding(innerPadding),
                                 onModeChosen = { gameMode -> navController.navigate(GameSetup(gameMode)) },
+                                onViewInfo = {navController.navigate(AppInfoMenu)}
                             )
                         }
                         composable<ProfileScreen> {
@@ -187,6 +195,22 @@ class MainActivity : ComponentActivity() {
                                 )
                             )
                         }
+
+                        composable<AppInfoMenu> {
+                            AppInfoScreen(
+                                modifier = Modifier.padding(innerPadding),
+                                onNavToDetailView = { navController.navigate(AppInfoDetail(it)) }
+                            )
+                        }
+
+                        composable<AppInfoDetail> {
+                            val args = it.toRoute<AppInfoDetail>()
+                            AppInfoDetailedView(
+                                modifier = Modifier.padding(innerPadding),
+                                screenId = args.screenId
+                            )
+                        }
+
                     }
                 }
             }
