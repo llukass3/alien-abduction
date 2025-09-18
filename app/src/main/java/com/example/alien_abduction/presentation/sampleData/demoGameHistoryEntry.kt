@@ -1,15 +1,21 @@
 package com.example.alien_abduction.presentation.sampleData
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import com.example.alien_abduction.domain.GameMode
 import com.example.alien_abduction.domain.dataModels.DefaultGameHistoryEntry
 import com.example.alien_abduction.domain.dataModels.MultiplayerGameHistoryEntry
 import com.example.alien_abduction.domain.dataModels.PlayerResult
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 val demoDefaultGameHistoryEntry = DefaultGameHistoryEntry(
     gameMode = GameMode.CLASSIC,
-    date = "17.09.2025",
-    timeOfDay = "23:12",
+    date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
+    timeOfDay = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")),
     playerResult = PlayerResult(
         playerGuess = demoPlayerGuess,
         proximity = 1000.0,
@@ -17,10 +23,11 @@ val demoDefaultGameHistoryEntry = DefaultGameHistoryEntry(
     ),
 )
 
+@RequiresApi(Build.VERSION_CODES.O)
 val demoMultiplayerGameHistoryEntry = MultiplayerGameHistoryEntry(
     gameMode = GameMode.MULTIPLAYER,
-    date = "17.09.2025",
-    timeOfDay = "23:12",
+    date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
+    timeOfDay = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")),
     playerResults = listOf(
         PlayerResult(
             playerGuess = demoPlayerGuessLists[0],

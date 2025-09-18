@@ -33,12 +33,12 @@ fun TopGameBar(
             .fillMaxSize()
     ) {
         if(displayRoundCounter)
-        RoundCounter(
-            modifier = Modifier
-                .size(width = 80.dp, height = 40.dp)
-                .align(Alignment.CenterStart),
-            currentRound = currentRound,
-            maxRounds = maxRounds
+            RoundCounter(
+                modifier = Modifier
+                    .size(width = 80.dp, height = 40.dp)
+                    .align(Alignment.CenterStart),
+                currentRound = currentRound,
+                maxRounds = maxRounds
         )
 
         CountdownCounter(

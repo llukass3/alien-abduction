@@ -1,5 +1,7 @@
 package com.example.alien_abduction.presentation.composables.screens.menu
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -30,6 +32,7 @@ import com.example.alien_abduction.R
 import com.example.alien_abduction.domain.PlayerSlot
 import com.example.alien_abduction.domain.dataModels.PlayerGuess
 import com.example.alien_abduction.domain.dataModels.PlayerResult
+import com.example.alien_abduction.domain.util.formatDistanceToMetric
 import com.example.alien_abduction.domain.util.getPlayerMarker
 import com.example.alien_abduction.presentation.composables.customComposables.MainGameButton
 import com.example.alien_abduction.presentation.sampleData.demoGameData
@@ -186,7 +189,7 @@ fun PlayerResult(
 
         Text(
             modifier = Modifier.weight(1f),
-            text = playerResult.proximity.toString(),
+            text = formatDistanceToMetric(playerResult.proximity),
             fontSize = 20.sp
         )
 
@@ -199,6 +202,7 @@ fun PlayerResult(
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview
 @Composable
 fun ResultScreenPreview() {

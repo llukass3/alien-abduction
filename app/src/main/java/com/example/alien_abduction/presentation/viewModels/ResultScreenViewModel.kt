@@ -1,5 +1,7 @@
 package com.example.alien_abduction.presentation.viewModels
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import com.example.alien_abduction.domain.GameMode
 import com.example.alien_abduction.domain.dataModels.DefaultGameHistoryEntry
@@ -11,7 +13,12 @@ import com.example.alien_abduction.domain.dataModels.PlayerGuess
 import com.example.alien_abduction.domain.dataModels.PlayerResult
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import com.google.maps.android.SphericalUtil
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
+@RequiresApi(Build.VERSION_CODES.O)
 class ResultScreenViewModel(val gameData: GameData) : ViewModel() {
 
     val alienLocation = LatLng(gameData.locationLatitude, gameData.locationLongitude)
@@ -26,24 +33,29 @@ class ResultScreenViewModel(val gameData: GameData) : ViewModel() {
                 playerGuess = it
             )
         }
-
         _playerResults.value = playerResultsUnsorted.sortedByDescending { it.points }
+
+        val gameHistoryEntry = buildGameHistoryEntry()
     }
 
-    //TODO: Implement
-    fun measureDistance(
+    private fun measureDistance(
         location: LatLng,
         guess: LatLng
     ): Double {
-        return 0.0
+        return SphericalUtil.computeDistanceBetween(location, guess)
     }
 
-    //TODO: Implement
-    fun calculateScore(distance: Double): Int {
-        return 1
+    private fun calculateScore(distance: Double): Int {
+        val maxScore = 5000
+        val maxDistance = 4_000_000.0 // 4000 km
+        val steepness = maxDistance / 6 // tweak 6 for balance; lower = steeper
+
+        // Exponential decay
+        val score = (maxScore * Math.exp(-distance / steepness)).toInt()
+        return score.coerceIn(0, maxScore)
     }
 
-    fun buildPlayerResult(
+    private fun buildPlayerResult(
         location: LatLng,
         playerGuess: PlayerGuess
     ): PlayerResult {
@@ -58,20 +70,21 @@ class ResultScreenViewModel(val gameData: GameData) : ViewModel() {
         )
     }
     
+    @RequiresApi(Build.VERSION_CODES.O)
     fun buildGameHistoryEntry(): GameHistoryEntry {
-        if (gameData.gameMode == GameMode.MULTIPLAYER)
-            return MultiplayerGameHistoryEntry(
+        return if (gameData.gameMode == GameMode.MULTIPLAYER)
+            MultiplayerGameHistoryEntry(
                 gameMode = gameData.gameMode,
-                date = TODO(),
-                timeOfDay = TODO(),
-                playerResults = TODO()
+                date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
+                timeOfDay = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")),
+                playerResults = playerResults.value
             )
         else return DefaultGameHistoryEntry(
-            gameMode = TODO(),
-            date = TODO(),
-            timeOfDay = TODO(),
-            playerResult = TODO()
-        ) 
+            gameMode = gameData.gameMode,
+            date = LocalDate.now().format(DateTimeFormatter.ofPattern("dd.MM.yyyy")),
+            timeOfDay = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")),
+            playerResult = playerResults.value.first()
+        )
         
     }
 

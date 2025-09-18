@@ -1,5 +1,7 @@
 package com.example.alien_abduction.presentation.composables.screens.menu
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,13 +27,16 @@ import androidx.compose.ui.unit.dp
 import com.example.alien_abduction.domain.dataModels.DefaultGameHistoryEntry
 import com.example.alien_abduction.domain.dataModels.MultiplayerGameHistoryEntry
 import com.example.alien_abduction.domain.dataModels.PlayerResult
+import com.example.alien_abduction.domain.util.formatDistanceToMetric
 import com.example.alien_abduction.domain.util.formatLatLngDMS
+import com.example.alien_abduction.domain.util.formatSecondsToMMSS
 import com.example.alien_abduction.presentation.sampleData.demoDefaultGameHistoryEntry
 import com.example.alien_abduction.presentation.sampleData.demoMultiplayerGameHistoryEntry
 import com.example.alien_abduction.ui.theme.AlienabductionTheme
 import com.example.alien_abduction.ui.theme.bodyMediumBold
 import com.google.android.gms.maps.model.LatLng
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun GameHistoryScreen(modifier: Modifier = Modifier) {
     Column(
@@ -171,10 +176,15 @@ fun GameHistoryEntryCard(
             Row(modifier = Modifier.align(Alignment.BottomStart)) {
                 Column(modifier = Modifier.weight(1f)) {
                     GameHistoryData(value = "${data.date} ${data.timeOfDay}")
-                    GameHistoryData(key = "Spielzeit", value = data.playerResult.playerGuess.timeLeft.toString())
+                    GameHistoryData(
+                        key = "Restzeit",
+                        value = if (data.playerResult.playerGuess.timeLeft != null) {
+                            formatSecondsToMMSS(data.playerResult.playerGuess.timeLeft)
+                        } else "\u221E"
+                    )
                 }
                 Column(modifier = Modifier.weight(1f)) {
-                    GameHistoryData(key = "Entfernung", value = data.playerResult.proximity.toString())
+                    GameHistoryData(key = "Entfernung", value = formatDistanceToMetric(data.playerResult.proximity))
                     GameHistoryData(key = "Punktzahl", value = data.playerResult.points.toString())
                 }
             }
