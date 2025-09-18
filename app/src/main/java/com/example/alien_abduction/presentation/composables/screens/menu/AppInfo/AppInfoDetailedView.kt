@@ -30,7 +30,7 @@ fun AppInfoDetailedView(
         modifier = modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(25.dp)
+            .padding(horizontal = 25.dp)
     ) {
         if(screenId == 1)
             AppDescription(modifier = Modifier.matchParentSize())
@@ -43,10 +43,10 @@ fun AppInfoDetailedView(
 @Composable
 fun HeadLine(text: String) {
     Text(
-        modifier = Modifier.padding(bottom = 5.dp, top = 15.dp),
+        modifier = Modifier.padding(bottom = 15.dp, top = 30.dp),
         color = Color.Black,
         style = MaterialTheme.typography.headlineLarge,
-        fontSize = 20.sp,
+        fontSize = 23.sp,
         textAlign = TextAlign.Justify,
         text = text
     )

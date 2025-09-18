@@ -30,7 +30,10 @@ fun AppInfoScreen(
             .fillMaxSize()
             .background(Color.White)
     ) {
-        Column(modifier.align(Alignment.Center)) {
+        Column(modifier
+            .align(Alignment.Center)
+            .padding(top = 60.dp)
+            ) {
             Button(
                 onClick = { onNavToDetailView(1) },
                 content = {

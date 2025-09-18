@@ -54,7 +54,7 @@ fun HomeScreen(
                 .padding(top = 5.dp, end = 5.dp)
         ) {
             Icon(
-                painter = painterResource(R.drawable.settings),
+                painter = painterResource(R.drawable.question_mark),
                 tint = MaterialTheme.colorScheme.primary,
                 contentDescription = "Info"
             )
